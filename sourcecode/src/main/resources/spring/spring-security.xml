@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/mvc 
+                           http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/security
+                           http://www.springframework.org/schema/security/spring-security.xsd
+                           http://www.springframework.org/schema/context
+      					   http://www.springframework.org/schema/context/spring-context.xsd">
+
+	
+	<security:http pattern="/resoures/**" security="none" />
+	
+	<security:http auto-config="true" use-expressions="true">
+		<security:access-denied-handler error-page="/error403"/>  
+  		<security:intercept-url pattern="/auth/**" access="permitAll"/>
+        <security:intercept-url pattern="/login" access="permitAll"/>
+        <security:intercept-url pattern="/signin/**" access="permitAll"/>
+        <security:intercept-url pattern="/signup/**" access="permitAll"/>
+        <security:intercept-url pattern="/user/register/**" access="permitAll"/>
+
+        <security:intercept-url pattern="/css/**" access="permitAll" />
+        <security:intercept-url pattern="/resources/**" access="permitAll" />
+        <security:intercept-url pattern="/fonts/**" access="permitAll" />
+        
+        <security:intercept-url pattern="/report/**" access="hasAnyRole('TRAINER', 'ADMIN')" />
+        <security:intercept-url pattern="/course/**" access="hasAnyRole('TRAINER', 'ADMIN')" />
+        <security:intercept-url pattern="/quiz-review/**" access="hasAnyRole('TRAINER', 'ADMIN')" />
+        
+        <security:intercept-url pattern="/admin/**" access="hasRole('ADMIN')" />
+        
+		 <!-- The rest of our application is protected. -->
+        <security:intercept-url pattern="/**" access="isAuthenticated()"/>
+		<!-- 
+		<security:intercept-url pattern="/**" access="isAuthenticated()" />
+		 -->
+		<!-- 
+		
+		<security:csrf disabled="true"/>
+		 -->
+		 
+	    	
+		 <security:headers>
+	        <security:frame-options />
+	    </security:headers>
+	    
+        <!-- Override default login and logout pages -->
+        <security:form-login login-page="/login" authentication-failure-url="/login?error=1" 
+        username-parameter="j_username" password-parameter="j_password" 
+        login-processing-url="/j_spring_security_check"
+        authentication-failure-handler-ref="authenticationFailureHandler"
+        authentication-success-handler-ref="authenticationSuccessHandler"
+        default-target-url="/index" always-use-default-target="false"/> 
+        <security:logout logout-url="/logout" success-handler-ref="logoutSuccessHandler" />
+   
+        <!-- Adds social authentication filter to the Spring Security filter chain. -->
+        <security:custom-filter ref="socialAuthenticationFilter" before="PRE_AUTH_FILTER" />
+   
+    </security:http>
+    
+	<security:authentication-manager alias="authenticationManager" erase-credentials="true" >
+		<security:authentication-provider user-service-ref="userService">
+			 <security:password-encoder ref="passwordEncoder" />	 		
+		</security:authentication-provider>
+		
+        <security:authentication-provider ref="socialAuthenticationProvider"/>
+	</security:authentication-manager>
+	
+	<bean id="authenticationFailureHandler" class="vn.wse.lms.security.CustomAuthenticationFailureHandler"></bean> 
+	<bean id="authenticationSuccessHandler" class="vn.wse.lms.security.CustomAuthenticationSuccessHandler"></bean>
+	<bean id="logoutSuccessHandler" class="vn.wse.lms.security.CustomLogoutSuccessHandler"></bean>
+	
+	 <!--
+        Configures the social authentication filter which integrates Spring Social
+        with Spring Security.
+    -->
+    <bean id="socialAuthenticationFilter" class="org.springframework.social.security.SocialAuthenticationFilter">
+        <constructor-arg index="0" ref="authenticationManager"/>
+        <constructor-arg index="1" ref="userIdSource"/>
+        <constructor-arg index="2" ref="usersConnectionRepository"/>
+        <constructor-arg index="3" ref="connectionFactoryLocator"/>
+
+        <!-- Sets the url of the registration form. -->
+        <property name="signupUrl" value="/user/register"/>
+        
+         <property name="authenticationSuccessHandler" ref="authenticationSuccessHandler"/>
+    </bean>
+
+    <!--
+        Configures the social authentication provider which processes authentication requests
+        made by using supported social authentication services (FB, Twitter and so on).
+    -->
+    <bean id="socialAuthenticationProvider" class="org.springframework.social.security.SocialAuthenticationProvider">
+        <constructor-arg index="0" ref="usersConnectionRepository"/>
+        <constructor-arg index="1" ref="socialUserDetailsService"/>
+    </bean>
+
+    <!--
+        This bean is used to load the user specific data when social sign in
+        is used.
+    -->
+    <bean id="socialUserDetailsService" class="vn.wse.lms.service.CustomSocialUserDetailsService">
+        <constructor-arg index="0" ref="userService"/>
+    </bean>
+
+    <!--
+        This bean encrypts the authorization details of the connection. In
+        our example, the authorization details are stored as plain text.
+        DO NOT USE THIS IN PRODUCTION.
+    -->
+    <bean id="textEncryptor" class="org.springframework.security.crypto.encrypt.Encryptors" factory-method="noOpText" />
+
+    <!--
+        This bean determines the account ID of the user. The example application
+        uses the username as the account ID.
+    -->
+    <bean id="userIdSource" class="org.springframework.social.security.AuthenticationNameUserIdSource"/>
+</beans>

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:layout="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:th="http://www.thymeleaf.org">
+<!-- Body -->
+
+<body>
+	<!-- Content -->
+	<div data-scrollable="true"
+		th:fragment="content">
+		<div class="container-fluid">
+			<script th:src="@{/resources/vendor/jquery.fileupload/init.js}"
+				type="text/javascript-lazy" />
+
+			
+			<script type="text/javascript">
+				function googleLogin() {
+					var url = window.location.href;
+					$(".currentUrl").val(url);
+				
+					var urlString = url.split(GLOBAL_URL + 'course/#/')[1];
+
+					$(".googleLogin").click(function() {
+
+						$.ajax({
+							url : GLOBAL_URL + 'setUrl',
+							data : {
+								'view' : 'course',
+								'url' : urlString
+							},
+							type : 'GET',
+							cache : false,
+							async : false,
+							success : function(data) {
+								$("#googleForm").submit();
+							}
+						});
+					})
+				}
+			</script>
+
+			<form id="googleForm" th:action="@{/auth/google}" method="POST">
+				<input type="hidden" name="scope"
+					value="email https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds https://docs.google.com/feeds" />
+				<input type="hidden" name="currentUrl" class="currentUrl" value="" />
+				<input type="hidden" name="access_type" value="offline" />
+			</form>
+
+			<form id="topicForm" class="form-horizontal p-a-1" method="post"
+				enctype="multipart/form-data" name="courseForm">
+
+				<style>
+input:invalid {
+	/* 	                border: 1px solid red; */
+	
+}
+.card{
+	margin-bottom: auto;
+    float: none;
+} 
+
+.full button span {
+	background-color: limegreen;
+	border-radius: 32px;
+	color: black;
+}
+
+.partially button span {
+	background-color: orange;
+	border-radius: 32px;
+	color: black;
+}
+</style>
+				
+					<ol class="breadcrumb m-b-0">
+						<li><a th:href="@{/index}">Home</a></li>
+						<li><a th:href="@{/course/#list}">Course Manager</a></li>
+						<li><a href="#/edit/{{::courseId}}">Course</a></li>
+						<li class="active" ng-show="!isAddTopic">Edit Topic</li>
+						<li class="active" ng-show="isAddTopic">Add Topic</li>
+					</ol>
+					<div dw-loading="topic" dw-loading-options="{text: 'Waiting...'}"
+					class="container-fluid">
+					<div class="row" style="margin-top: -10px; float: right">
+						<div class="col-md-4 right">
+							<button ng-click="saveTopic()"
+								class="btn btn-secondary btn-rounded-deep right"
+								style="z-index: 100" ng-disabled="courseForm.$invalid">
+								<i class="material-icons">save</i>SAVE
+							</button>
+						</div>
+						<div class="media">
+							<!-- <div class="media-body">
+						<h1 class="page-heading h2">Topic Form</h1>
+					</div> -->
+
+							<div ng-show="saveSuccess" class="alert alert-success"
+								role="alert">Save successfully!</div>
+							<div ng-show="saveFailed" class="alert alert-danger" role="alert">
+								Save Failed!</div>
+						</div>
+						<div class="row top-10 left">
+							<div class="col-md-8">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Basic Information</h4>
+									</div>
+									<div class="card-block">
+										<div class="form-group">
+											<label for="title">Title</label> <input type="text"
+												class="form-control" placeholder="Write a title"
+												ng-model="topic.title" required="required" />
+										</div>
+										<div class="form-group">
+											<label for="details">Description</label>
+											<summernote config="summerNoteOptions"
+												ng-model="topic.descriptionAsString" required="true"></summernote>
+										</div>
+										<div class="form-group">
+											<label for="details">Locked </label> <input type="checkbox"
+												ng-model="topic.locked" ng-checked="topic.locked === true"
+												ng-true-value="true" ng-false-value="false" />
+										</div>
+
+										
+
+									</div>
+								</div>
+								<!-- materials -->
+								<div id="materialDiv" ng-hide="isAddTopic">
+									<div class="row">
+										<div class="col-md-12">
+											<ul ui-sortable="sortableOptions" ng-model="materials"
+												class="list2">
+												<li ng-repeat="material in materials" class="item">
+													<div class="card">
+														<div class="card-header handle">
+															<div class="row card-title">
+																<div class="col-xs-1" ng-click="open(material)"
+																	style="width: inherit; cursor: pointer;">
+																	<span> <i class="fa "
+																		ng-class="{'fa-chevron-down':material.open,'fa-chevron-up':!material.open}"></i>{{material.title}}
+																	</span>
+																</div>
+																<div class="col-xs-5">
+																	<div class="card-title">
+																		<input ng-model="material.materialName"
+																			class="form-control" type="text" required="true" />
+																	</div>
+																</div>
+
+																<div class="col-xs-5">
+																	<div class="row">
+																		<select class="c-select form-control"
+																			ng-model="material.type" required="true"
+																			ng-change="removeQuiz(material.type)">
+																			<option value="" selected="selected">Choose
+																				Material Type</option>
+																			<option value="1">Text</option>
+																			<option value="2">File</option>
+																			<option value="3">Video</option>
+																			<option value="4">Quiz</option>
+																		</select>
+																	</div>
+																</div>
+
+																<div class="col-xs-1 right">
+																	<a href="javascript:void(0)"
+																		ng-click="removeMaterial(material)"
+																		style="width: inherit; cursor: pointer;"><i
+																		class="fa fa-trash" title="Delete"></i></a>
+																</div>
+															</div>
+														</div>
+														<div class="card-block" ng-show="material.open">
+															<div class="row-fluid">
+																<div class="animate-switch-container" ng-switch=""
+																	on="material.type">
+																	<div class="animate-switch" ng-switch-when="1">
+																		<summernote config="summerNoteOptions"
+																			ng-model="material.materialDataAsString"
+																			required="true"></summernote>
+																	</div>
+																	<div class="animate-switch filepicker"
+																		ng-switch-when="2">
+
+																		<div sec:authorize="!hasRole('ROLE_GOOGLE')">
+																			<button onclick="googleLogin()" type="button"
+																				class=" googleLogin btn btn-danger btn-gradient  btn-block btn-rounded ">Login
+																				google for this function</button>
+																		</div>
+
+																		<div sec:authorize="hasRole('ROLE_GOOGLE')">
+
+																			<a href="javascript:void(0);" lk-google-picker=""
+																				ng-init="initPicker(material)"
+																				on-picked="onPicked(material, docs)"
+																				on-loaded="onLoaded()" on-cancel="onCancel()"
+																				class="btn btn-2 btn-2c btn-blue"> <i
+																				class="fa fa-inbox"></i> <span>Pick file</span>
+																			</a>
+
+																			<div class="row dashed-border"
+																				ng-switch="material.files.length > 0">
+																				<div class="text-center" ng-switch-when="false">
+																					<div class="none">No files selected yet</div>
+																				</div>
+
+																				<div ng-switch-when="true">
+																					<div class="col-sm-12 item item-test"
+																						style="max-height: 130px; min-height: 130px"
+																						ng-repeat="file in material.files">
+																						<a href="javascript:void(0)"
+																							ng-click="removeFile(file, material)"
+																							title="remove"><i class="fa fa-times"
+																							aria-hidden="true"
+																							style="color: red; float: right"></i></a> <a
+																							href="{{ file.url }}" title="{{file.name}}"
+																							target="_blank">
+																							<div class="icon">
+																								<div class="document">
+																									<span class="ng-binding"> {{ file.name |
+																										getExtension }} </span>
+																								</div>
+																							</div>
+																							<div>
+																								<span>{{ file.name | limitTo:255 }}</span><span
+																									ng-if="file.name.length >=255">...</span>
+																							</div>
+																						</a>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+
+																	</div>
+																	<div class="animate-switch" ng-switch-when="3">
+																		<div class="row">
+																			<div class="col-md-12">
+																				<label for="title">Link youtube</label>
+																				<textarea class="form-control"
+																					ng-model="material.path" required="true"
+																					ng-maxlength="200"
+																					ng-change="trustUrl(material.path, material)"
+																					ng-model-options="{ updateOn: 'blur' }"></textarea>
+																			</div>
+
+																		</div>
+																		<div class="row">
+																			<div class="col-md-12">
+																				<iframe ng-show="material.path" width="100%"
+																					height="315" ng-src="{{material.urlVideo}}"
+																					ng-init="trustUrl(material.path, material)"> </iframe>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="animate-switch" ng-switch-when="4">
+
+																		<div sec:authorize="!hasRole('ROLE_GOOGLE')">
+																			<button onclick="googleLogin()" type="button"
+																				class=" googleLogin btn btn-danger btn-gradient  btn-block btn-rounded ">Login
+																				google for this function</button>
+																		</div>
+
+																		<div sec:authorize="hasRole('ROLE_GOOGLE')">
+																			<div class="form-group">
+																				<label for="title">Spreadsheet Name:</label> <input
+																					type="text" typeahead-editable="false"
+																					ng-model="material.path"
+																					placeholder="Enter spreadsheet name"
+																					uib-typeahead="spreadsheets as spreadsheets.title for spreadsheets in getSpreadsheets($viewValue)"
+																					typeahead-on-select="onSelect($item, $model, $label, material)"
+																					typeahead-loading="loadingLocations"
+																					typeahead-no-results="noResults"
+																					class="form-control" /> <i
+																					ng-show="loadingLocations" class="fa fa-refresh"></i>
+																				<div ng-show="noResults">
+																					<i class="fa fa-times"></i> No Results Found
+																				</div>
+																			</div>
+
+																			<div class="form-group">
+																				<button ng-disabled="!material.path" type="button"
+																					class="btn btn-sm btn-primary btn-rounded"
+																					ng-click="parserQuestionFromUrl(material)">Parser
+																					question</button>
+																					
+																				<a href="/quiz-review/{{courseId}}/{{topic.topicId}}/{{material.materialId}}"  
+																					class="btn btn-sm btn-primary btn-rounded">Quiz Review</a>
+																			</div>
+
+																			<div class="row">
+																				<div class="col-md-3">
+																					<div class="form-group">
+																						<label for="title">Passing grade (%)</label> <input
+																							type="text" class="form-control"
+																							placeholder="Enter passing grade"
+																							ng-model="material.quizTemplate.passingGrade"
+																							required="true" />
+																					</div>
+																				</div>
+
+																				<div class="col-md-3">
+																					<div class="form-group">
+																						<label for="title">Total point</label> <input
+																							type="text" class="form-control"
+																							placeholder="Enter total ponit"
+																							ng-model="material.quizTemplate.totalPoint"
+																							required="true" />
+																					</div>
+																				</div>
+																				
+																				<div class="col-md-3">
+																					<div class="form-group">
+																						<label for="title">Num. Attempts</label> <input
+																							type="text" class="form-control"
+																							placeholder="Enter total ponit"
+																							ng-model="material.quizTemplate.numAttempt"
+																							required="true" />
+																					</div>
+																				</div>
+																				
+																				<div class="col-md-3">
+																					<div class="form-group">
+																						<label for="title">Quiz time (minutes)</label> <input
+																							type="text" class="form-control"
+																							placeholder="Enter quiz time"
+																							ng-model="material.quizTemplate.quizTime"
+																							required="true" />
+																					</div>
+																				</div>
+
+																			</div>
+																			
+																			<div class="card"
+																				ng-show="material.quizTemplate.questionTemplates.length > 0">
+																				<div class="card-header">Question</div>
+																				<table class="table">
+																					<thead>
+																						<tr>
+																							<th>#</th>
+																							<th>Section</th>
+																							<th>Question name</th>
+																							<th>Type</th>
+																							<th>Right Ans.</th>
+																							<th>Grade</th>
+																						</tr>
+																					</thead>
+																					<tbody>
+																						<tr
+																							ng-repeat="question in material.quizTemplate.questionTemplates">
+																							<th scope="row">{{$index +1 }}</th>
+																							<td>{{::question.sectionTitle}}</td>
+																							<td>{{::question.questionTitle}}</td>
+																							<td>{{::question.questionType}}</td>
+																							<td>{{::question.rightAnswer}}</td>
+																							<td>{{::question.grade}}</td>
+																						</tr>
+																					</tbody>
+																				</table>
+																			</div>
+																		</div>
+
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</li>
+											</ul>
+											<div class="form-group">
+												<button type="button"
+													class="btn btn-sm btn-default btn-rounded-deep btn-sm right"
+													ng-click="addMaterialFragment()">
+													Add Material<i class="material-icons">add</i>
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- end materials -->
+								<div class="row">
+									<div class="col-xs-12 center">
+										<button ng-click="saveTopic()"
+											class="btn btn-secondary btn-rounded-deep "
+											ng-disabled="courseForm.$invalid">
+											<i class="material-icons">save</i>SAVE
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="card">
+									<div class="card-header">
+										<h4 class="card-title">Extra Information</h4>
+									</div>
+									<div class="card-block">
+										<div class="form-group row">
+											<label for="start" class="col-sm-6  form-control-label">Start
+												Date </label>
+											<div class="col-sm-6">
+												<input type="text" disabled="disabled" ng-click="open1()"
+													class="form-control" uib-datepicker-popup="{{formatDate}}"
+													ng-model="topic.startDate" is-open="popup1.opened"
+													datepicker-options="dateOptions" close-text="Close"
+													alt-input-formats="altInputDateFormats" />
+											</div>
+										</div>
+										<div class="form-group row">
+											<label for="end" class="col-sm-6  form-control-label">End
+												Date </label>
+											<div class="col-sm-6">
+												<input type="text" disabled="disabled" ng-click="open2()"
+													class="form-control" uib-datepicker-popup="{{formatDate}}"
+													ng-model="topic.endDate" is-open="popup2.opened"
+													datepicker-options="dateOptions" close-text="Close"
+													alt-input-formats="altInputDateFormats" />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+
+</html>

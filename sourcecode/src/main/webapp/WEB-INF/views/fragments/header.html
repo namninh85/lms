@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+	<body>
+		<!-- Header -->
+			<header id="top" th:fragment="header">
+				<!-- Navbar -->
+				  <nav class="navbar navbar-dark bg-primary navbar-full navbar-fixed-top">
+				
+				    <!-- Toggle sidebar -->
+				    <button class="navbar-toggler pull-xs-left" type="button" data-toggle="sidebar" data-target="#sidebarLeft"><span class="material-icons">menu</span></button>
+				
+				    <!-- Brand -->
+				    <!--<a href="index.html" class="navbar-brand"><i class="material-icons">school</i> Wall Street English</a> -->
+					<a href="" th:href="@{/index}" class="navbar-brand"><img class="logo-icon" title="Wall Street English" src="assets/images/logo-icon.png" th:src="@{/resources/images/logo-icon.png}"/><img class="logo-text" title="Wall Street English" src="assets/images/logo-text.png" th:src="@{/resources/images/logo-text.png}"/></a>
+				    <!-- Search -->
+				    <!-- 
+				    <form class="form-inline pull-xs-left hidden-sm-down" >
+				      <div class="input-group" style="margin-left:90px" >
+				        <input type="text" class="form-control" placeholder="Search"/>
+				        <span class="input-group-btn"><button class="btn" type="button"><i class="material-icons">search</i></button></span>
+				      </div>
+				    </form>
+				     -->
+				    <!-- // END Search -->
+				
+				    <!-- Menu -->
+				    <ul class="nav navbar-nav pull-xs-right">      
+				
+				      <!-- User dropdown -->
+				      <li class="nav-item dropdown">
+				        <a class="nav-link active dropdown-toggle p-a-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="false">
+				       	<span th:if="${beans.appContext.userProfile.avatar ne null}">
+				       		   <img th:src="@{/} + 'file/download?fileName=' + ${beans.appContext.userProfile.avatar}" alt="Avatar" class="img-circle" height="40" width="40"/>
+				       	</span>
+				       	<span th:if="${beans.appContext.userProfile.avatar eq null}">
+				       		 <img src="assets/images/people/50/guy-6.jpg" th:src="@{/resources/images/people/50/guy-6.jpg}" alt="Avatar" class="img-circle" width="40"/>
+				       	</span>
+				       
+				         
+				          <span th:text="${beans.appContext.userProfile.fullName}">Vo Van Cuong</span>
+				        </a> 
+				        <div th:switch="${beans.appContext.userProfile.socialSignInProvider}" class="dropdown-menu dropdown-menu-right dropdown-menu-list" aria-labelledby="Preview"> 
+				          <a class="dropdown-item" th:href="@{/admin/profile/#/edit/} + ${beans.appContext.userProfile.id}"><i class="material-icons md-18">lock</i> <span class="icon-text">Edit Profile</span></a>
+				          <a th:case="null" class="dropdown-item" th:href="@{/admin/profile/#/changepassword/} + ${beans.appContext.userProfile.id}"><i class="material-icons md-18">person</i> <span class="icon-text">Change password</span></a>
+				          <a class="dropdown-item" href="/logout" th:href="@{#}" onclick="$('#logoutForm').submit();">Logout</a>
+				          <form style="visibility: hidden" id="logoutForm" method="post" action="#" th:action="@{/logout}"></form>
+				        </div>
+				      </li>
+				      <!-- // END User dropdown -->
+				
+				    </ul>
+				    <!-- // END Menu -->
+				  </nav>
+			</header>
+	<!-- /Header -->
+	</body>
+</html>

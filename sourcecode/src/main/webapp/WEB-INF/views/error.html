@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="template/layout" xmlns:layout="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/schema/security" th:with="title='Error Page'">
+<body>
+	<div layout:fragment="content" class="row content">
+		<form class="col-xs-12 text-center">
+			<div class="row error-page">
+				<div class="col-xs-6 error-content text-right">
+					<img src="../../resources/images/error.png" th:src="@{/resources/images/error.png}" style="max-width:85px; max-height:85px;"></img>
+				</div>
+				<div class="col-xs-6 error-content">
+					<h4><i class="glyphicon glyphicon-warning-sign text-yellow"></i> Oops! Something went wrong.</h4>
+					<p>We will work on fixing that right away. <br></br>
+					Meanwhile, you may <a th:href="@{/}">return to dashboard</a>.</p>
+				</div>
+			</div><!-- /.error-page -->
+			<div class="col-lg-12 col-md-12" th:if="${exception ne null}">
+				<div role="alert" class="alert alert-danger fade in">
+					<button data-dismiss="alert" class="close" type="button">
+						<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+					</button>
+					<ul class="text-left">
+						<li>Error Code: <label style="color:blue; font-weight:bold;" th:text="${exception.exceptionID}"></label></li>
+						<li>Unknown error. Please send ErrorCode to Admin !!!</li>
+						<li sec:authorize="hasRole('NB-PROPOSAL-KEYIN')" th:text="'Error Detail: ' + ${exception.messageCode}"></li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-lg-12 col-md-12" th:if="${rootCauseException ne null}">
+				<div role="alert" class="alert alert-danger fade in">
+					<button data-dismiss="alert" class="close" type="button">
+						<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+					</button>
+					<ul class="text-left">
+						<li>Error Code: <label style="color:blue; font-weight:bold;" th:text="${rootCauseException.exceptionID}"></label></li>
+						<li>Unknown error. Please send ErrorCode to Admin !!!</li>
+						<li sec:authorize="hasRole('NB-PROPOSAL-KEYIN')" th:text="'Error Detail: ' + ${rootCauseException.messageCode}"></li>
+					</ul>
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

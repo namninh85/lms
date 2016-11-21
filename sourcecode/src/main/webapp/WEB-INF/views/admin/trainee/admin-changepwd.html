@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	layout:decorator="template/layout"
+	xmlns:layout="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:th="http://www.thymeleaf.org">
+	<head>
+	
+	</head>
+	<!-- Body -->
+	<body>
+		<!-- Content -->
+		  <div class="layout-content" data-scrollable="true" th:fragment="content">
+		    <script th:src="@{/resources/vendor/jquery.fileupload/init.js}" type="text/javascript-lazy"/>
+			<div class="container-fluid">
+
+			  <ol class="breadcrumb">
+				<li><a href="#">Home</a></li>
+				<li class="active">Change password</li>
+			  </ol>
+			  <!-- <h1 class="page-heading h2">Edit Trainee</h1> -->
+		
+			  <div class="card">
+			  	<div class="p-a-1">
+		          <form id="frmTrainee" name="frmTrainee" method="post" enctype="multipart/form-data" >
+		          	 
+			        <div class="form-group row">
+		            	<label for="fullname" class="col-sm-3 form-control-label">Full Name</label>
+		           		<div class="col-md-6">
+			                {{user.fullName}}
+			             </div>
+		            </div>
+		              	
+		            <div class="form-group row">
+		            	<label for="email" class="col-sm-3 form-control-label">Email</label>
+		           		<div class="col-md-6">
+		           			<div class="input-group">
+		           				 <span id="basic-addon3" class="input-group-addon">
+									<i class="material-icons md-18 text-muted">mail</i>
+								</span>
+		           				{{user.email}}
+		           			</div>
+			             </div>
+			            
+		            </div>
+					
+					<div class="form-group row">
+		            	<label for="password" class="col-sm-3 form-control-label">Password</label>
+		           		<div class="col-md-6">
+		           			<div class="input-group">
+		           				<span id="basic-addon3" class="input-group-addon">
+									<i class="material-icons md-18 text-muted">lock</i>
+								</span>
+		           				<input type="password" ng-model="user.password" class="form-control" placeholder="Password" name="password" id="password" ng-required="true" />
+		           			</div>
+			                
+			             </div>
+		            </div>
+		            <div class="form-group row">
+		            	<label for="password" class="col-sm-3 form-control-label">Confirm Password</label>
+		           		<div class="col-md-6">
+			                
+			                <div class="input-group">
+		           				<span id="basic-addon3" class="input-group-addon">
+									<i class="material-icons md-18 text-muted">lock</i>
+								</span>
+		           				<input type="password" class="form-control" ng-model="user.confirm_password" placeholder="Password" name="confirm_password" id="confirm_password" ng-required="true" />
+		           			</div>
+			             </div>
+		            </div>	
+		            
+		            <div class="form-group row m-b-0">
+	                  <div class="col-sm-offset-3 col-sm-3">
+		                  <button type="submit" ng-click="changePassword()" class="btn btn-secondary btn-rounded-deep" ng-disabled="frmTrainee.$invalid">Change Password</button>
+		                  
+	                  </div>
+	                </div>	  
+	              	        
+		          </form>
+		   		
+        		</div>
+			  </div>
+			</div>	
+		  </div>
+  
+	</body>
+	
+	<!-- End -->
+</html>

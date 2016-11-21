@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en"
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<body>
+
+<!-- Sidebar -->
+  
+  <div class="sidebar sidebar-left sidebar-light sidebar-visible-md-up si-si-3 ls-top-navbar-xs-up sidebar-transparent-md" id="sidebarLeft" data-scrollable="true" th:fragment="menu">
+  <!-- 
+    <div class="sidebar-heading">APPLICATIONS</div>
+    <ul class="sidebar-menu">
+      <li class="sidebar-menu-item">
+        <a class="sidebar-menu-button" href="/trainer-dashboard" th:href="@{/trainer/trainer-dashboard}">
+          <i class="sidebar-menu-icon material-icons">school</i> Trainer
+        </a>
+      </li>
+      <li class="sidebar-menu-item active">
+        <a class="sidebar-menu-button" href="/trainee-dashboard" th:href="@{/trainee/trainee-dashboard}">
+          <i class="sidebar-menu-icon material-icons">account_box</i> Trainee
+        </a>
+      </li>
+    </ul>
+	 -->
+	<!-- trainer -->
+	<div class="sidebar-heading" sec:authorize="hasRole('TRAINER')">Trainer</div>
+	
+    <ul class="sidebar-menu" sec:authorize="hasRole('TRAINER')">
+      <li class="sidebar-menu-item">
+        <a class="sidebar-menu-button" href="/trainer-courses" th:href="@{/course/#list}">
+          <i class="sidebar-menu-icon material-icons">import_contacts</i> Course Manager
+        </a>
+      </li>
+      <li class="sidebar-menu-item">
+        <a class="sidebar-menu-button" href="trainer-report.html" th:href="@{/report/#course-report}" >
+          <i class="sidebar-menu-icon material-icons">insert_chart</i> Reports
+        </a>
+      </li>
+          
+      
+      
+    </ul>
+    
+	<!-- end trainer -o-->
+    
+    <div class="sidebar-heading" sec:authorize="hasRole('TRAINEE')">Trainee</div>
+    <ul class="sidebar-menu" sec:authorize="hasRole('TRAINEE')">
+      <li class="sidebar-menu-item">
+        <a class="sidebar-menu-button" href="browse-courses.html" th:href="@{/#/trainee/browse-courses}">
+          <i class="sidebar-menu-icon material-icons">find_in_page</i> Browse Courses
+        </a>
+      </li>
+	  
+	  <li class="sidebar-menu-item">
+        <a class="sidebar-menu-button" href="my-courses.html" th:href="@{/#/trainee/my-courses}">
+          <i class="sidebar-menu-icon material-icons">book</i> My Courses
+        </a>
+      </li>
+	  
+	  <li class="sidebar-menu-item">
+        <a class="sidebar-menu-button" href="my-courses.html" th:href="@{/#/trainee/my-history}">
+          <i class=" sidebar-menu-icon material-icons">history</i>My History
+        </a>
+      </li>
+      
+    </ul>
+    
+    <!-- Admin -->
+    <div class="sidebar-heading" sec:authorize="hasRole('ADMIN')">Administration</div>
+    <ul class="sidebar-menu" sec:authorize="hasRole('ADMIN')">
+      <!-- 
+      <li class="sidebar-menu-item">
+        <a class="sidebar-menu-button" href="#" th:href="@{/admin/trainer/#/list}">
+          <i class="sidebar-menu-icon material-icons">school</i> Trainers
+        </a>
+      </li>
+       -->
+      <li class="sidebar-menu-item">
+        <a class="sidebar-menu-button" href="#" th:href="@{/admin/user/#/list}">
+          <i class="sidebar-menu-icon material-icons">account_box</i> User Management
+        </a>
+      </li>
+    </ul>
+    <!--  End admin -->
+    
+  </div>
+  <!-- // END Sidebar -->
+  
+</body>
+</html>

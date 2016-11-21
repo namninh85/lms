@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	layout:decorator="template/layout"
+	xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org">
+<!-- Body -->
+<body>
+
+	<!-- Content -->
+	<div class="layout-content" data-scrollable="true"
+		layout:fragment="content">
+
+
+		<div class="layout-content" data-scrollable="true" ng-app="lms.quiz" ng-controller="QuizController">
+			<style>
+input:invalid {
+	border: 1px solid red;
+}
+
+.full button span {
+	background-color: limegreen;
+	border-radius: 32px;
+	color: black;
+}
+
+.partially button span {
+	background-color: orange;
+	border-radius: 32px;
+	color: black;
+}
+</style>
+<form action="#" class="form-horizontal">
+			<input type="hidden" th:value="${courseId}" name="courseId"
+				id="courseId" /> <input type="hidden" th:value="${topic.topicId}"
+				name="topicId" id="topicId" /> <input type="hidden"
+				th:value="${quizMaterialId}" name="quizMaterialId"
+				id="quizMaterialId" /> <input type="hidden"
+				th:value="${traineeQuizId}" name="traineeQuizId" id="traineeQuizId" />
+			<div dw-loading="quiz" dw-loading-options="{text: 'Waiting...'}"
+				class="container-fluid">
+				<div class="col-md-12">
+					<ol class="breadcrumb m-b-0">
+						<li><a href="#" th:href="@{/index}">Home</a></li>
+						<li><a href="#" th:href="@{/#/trainee/my-courses}">My Courses</a></li>
+						<li><a href="#"
+							th:href="@{/trainee/take-course/} + ${course.courseId}"><span
+								th:text="${course.title}">Course Name</span></a></li>
+						<li><a href="#" class="active"
+							th:href="@{/trainee/view-topic/} + ${course.courseId} + '/' + ${topic.topicId}"><span
+								th:text="${topic.title}">Topic Name</span></a></li>
+					</ol>
+				</div>
+				<div class="col-md-8  top-20">
+					<!-- <div class="card-group">
+        <div class="card">
+          <div class="card-block center">
+            <h4 class="m-b-0">
+              <strong>{{quiz.total}}</strong>
+            </h4>
+            <small class="text-muted-light">TOTAL</small>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-block center">
+            <h4 class="text-success m-b-0">
+              <strong>{{quiz.correct}}</strong>
+            </h4>
+            <small class="text-muted-light">CORECT</small>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-block center">
+            <h4 class="text-danger m-b-0">
+              <strong>{{quiz.wrong}}</strong>
+            </h4>
+            <small class="text-muted-light">WRONG</small>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-block center">
+            <h4 class="text-primary m-b-0">
+              <strong>{{quiz.left}}</strong>
+            </h4>
+            <small class="text-muted-light">LEFT</small>
+          </div>
+        </div>
+      </div> -->
+
+					<div class="card card-stats-primary" ng-if="quiz.current.question">
+						<div class="card-block" >Quiz Section:
+							{{quiz.current.question.sectionTitle}}</div>
+						<div class="card-block"
+							ng-if="quiz.current.question.videoLink != ''">
+							Video Link: <a href="{{quiz.current.question.videoLink}}"
+								target="_blank">Click here!</a>
+						</div>
+					</div>
+					<div class="card" ng-show="quiz.current.question">
+						<div class="card-header bg-white p-a-1">
+							<div class="media">
+								<div class="media-left media-middle">
+									<h4 class="m-b-0">
+										<strong>#</strong>
+									</h4>
+								</div>
+								<div class="media-body  media-middle">
+									<h4 class="card-title">
+										<span ng-if="quiz.current.question.question != ''"> {{quiz.current.question.question}}</span></h4>
+								</div>
+							</div>
+						</div>
+						
+
+						<div class="card-block p-a-2"
+							ng-if="quiz.current.question.questionType=='Multiple choice' || quiz.current.question.questionType=='Checkbox'">
+							<!-- multiple choice -->
+							<div class="form-group" ng-repeat="ans in quiz.current.ansList">
+								<label class="c-input c-checkbox"> <input
+									type="checkbox" value="{{ans.index}}"
+									ng-click="toggleSelection(ans.index)" /> <span
+									class="c-indicator"></span> {{ans.index}}) {{ans.text}}
+								</label>
+							</div>
+
+						</div>
+
+						<div class="card-block p-a-2"
+							ng-if="quiz.current.question.questionType=='Text'">
+							<!-- multiple choice -->
+							<div class="form-group">
+								<input type="text" name="textAns" id="textAns" ng-model="objAns.text"
+									placeholder="Write answer here" class="form-control" />
+							</div>
+
+						</div>
+
+						<div class="card-block p-a-2"
+							ng-if="quiz.current.question.questionType=='Single choice'">
+							<!-- multiple choice -->
+							<div class="form-group" ng-repeat="ans in quiz.current.ansList">
+								<label class="c-input c-checkbox"> <input type="radio"
+									ng-model="singleAns" value="abc" id="singleChoice" name="singleChoice" ng-click="toggleSingleChoice(ans.index)"/> <span
+									class="c-indicator"></span> {{ans.index}}) {{ans.text}}
+								</label>
+							</div>
+
+						</div>
+
+
+						<div ng-if="quiz.current.question.questionType=='Ordering'" >
+
+							<ul ui-sortable="sortableOptions" ng-model="quiz.current.ansList" style="list-style:none; margin:0; padding:10px 0; line-height:35px">
+								<li ng-repeat="ans in quiz.current.ansList" class="item"><label
+									class="c-input c-checkbox"> <input type="radio"
+										value="{{ans.index}}" id="ans-id" /> <span><i class="material-icons">keyboard_arrow_down</i>{{ans.index}})  {{ans.text}}</span>
+								</label></li>
+							</ul>
+
+
+						</div>
+
+						<div class="card-header bg-white p-a-1" ng-if="quiz.ansResult">
+							<span ng-if="quiz.current.question.required != 0">Right Answer: {{quiz.ansResult.rightAns}} - {{quiz.ansResult.trainerFeedback}}</span>
+						</div>
+
+						<div class="card-footer">
+							<a href="#"
+								class="btn btn-success btn-sm" ng-click="quizAns()" ng-if="!quiz.ansResult">Answer<i
+								class="material-icons"></i></a>
+							<a href="#"
+								class="btn btn-success btn-sm" ng-click="nextQuestion()" ng-if="quiz.ansResult">Next<i
+								class="material-icons">navigate_next</i></a>
+							<a href="#" class="btn btn-default btn-sm right" ng-click="skipQuestion()" ng-if="quiz.current">Skip<i
+								class="material-icons  ">skip_next</i></a> 
+						</div>
+					</div>
+
+					<div class="row-fluid center">
+						<a href="#" class="btn btn-secondary btn-rounded-deep"
+							ng-click="quizFinish()"><i class="material-icons">done_all</i>Finish</a>
+					</div>
+
+				</div>
+
+				<!-- Sidebar -->
+				<div class="col-md-4   top-20">
+					<div class="card">
+						<div class="sidebar-heading">Time left</div>
+						
+						<div class="countdown" data-value=""  data-unit="second"></div>						
+					</div>
+					<div class="card">
+						<div class="sidebar-heading">STATISTCS</div>
+						<div class="col-xs-3 center">
+							<h4 class="m-b-0">
+								<strong ng-bind="quiz.total">0</strong>
+							</h4>
+							<small class="text-muted-light">TOTAL</small>
+						</div>
+						<div class="col-xs-3 text-success center">
+							<h4 class="m-b-0">
+								<strong ng-bind="quiz.correct">0</strong>
+							</h4>
+							<small class="text-muted-light">CORRECT</small>
+						</div>
+						<div class="col-xs-3 text-danger center">
+							<h4 class="m-b-0">
+								<strong ng-bind="quiz.wrong">0</strong>
+							</h4>
+							<small class="text-muted-light">WRONG</small>
+						</div>
+						<div class="col-xs-3 text-primary center">
+							<h4 class="m-b-0">
+								<strong ng-bind="quiz.left">0</strong>
+							</h4>
+							<small class="text-muted-light">LEFT</small>
+						</div>
+					</div>
+					<div class="card">
+						<ul class="list-group list-group-fit"
+							ng-show="quiz.pendingList.length > 0">
+							<li class="list-group-item sidebar-heading">PENDING</li>
+							<li class="list-group-item"
+								ng-repeat="question in quiz.pendingList"><a href="#"> <span
+									class="media"> <span class="media-left"> <span
+											class="btn btn-white btn-circle">#</span>
+									</span> <span class="media-body media-middle">
+											{{::question.question}} </span>
+								</span>
+							</a></li>
+
+						</ul>
+					</div>
+
+					<style>
+.section {
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+
+/***  Extra ***/
+.logList {
+	min-height: 200px;
+	border: 5px solid #000;
+	border-radius: 15px;
+}
+</style>
+					<!-- // END Sidebar -->
+				</div>
+				
+			</div>
+			</form>
+		</div>
+
+
+	</div>
+<script type="text/javascript">
+
+window.onready = function() {
+	setTimeout(function(){$('.countdown').tkCountdown();},5000)
+		
+	};
+
+</script>
+
+</body>
+<!-- End -->
+</html>

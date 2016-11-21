@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org">
+<!-- Body -->
+
+<body>
+	<!-- Content -->
+	<div class="layout-content ng-scope" data-scrollable="true"
+		th:fragment="content">
+		<div class="container-fluid" style="margin-bottom:20px">
+		<script th:src="@{/resources/vendor/jquery.fileupload/init.js}"
+			type="text/javascript-lazy" />
+		<script th:src="@{/resources/vendor/nestable/nestable.js}"
+			type="text/javascript-lazy"></script>
+		<form class="form-horizontal p-a-1" 
+			enctype="multipart/form-data" name="courseForm">
+
+			<script
+				th:src="@{/resources/vendor/bootstrap-tagsinput/bootstrap.min.2.3.2.js}"
+				type="text/javascript-lazy" />
+
+			<style>
+			input:invalid {
+				/* 	border: 1px solid red; */
+				
+			}
+			
+			.full button span {
+				background-color: limegreen;
+				border-radius: 32px;
+				color: black;
+			}
+			
+			.partially button span {
+				background-color: orange;
+				border-radius: 32px;
+				color: black;
+			}
+			</style>
+
+			<div dw-loading="course" dw-loading-options="{text: 'Waiting...'}">
+				<modal title="Section Form" visible="showModalSection">
+
+				<div ng-show="alertMessage">
+					<div ng-show="!sectionIsAdd" class="alert alert-success"
+						role="alert">Update successfully!</div>
+
+					<div ng-show="sectionIsAdd" class="alert alert-success"
+						role="alert">Add successfully!</div>
+				</div>
+
+				<div class="form-group row">
+					<label class="col-sm-4  form-control-label" for="name">Section
+						title</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control"
+							ng-model="sectionEdit.title" placeholder="Enter title" />
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label for="end" class="col-sm-4  form-control-label">Start
+						Date</label>
+					<div class="col-sm-6">
+						<!-- <input class="datepicker form-control" type="text" ng-model="sectionEdit.startDate" /> -->
+						<input type="text" ng-click="open3()" class="form-control"
+							uib-datepicker-popup="{{formatDate}}"
+							ng-model="sectionEdit.startDate" is-open="popup3.opened"
+							datepicker-options="dateOptions" close-text="Close"
+							alt-input-formats="altInputDateFormats" />
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="start" class="col-sm-4  form-control-label">To
+						Date</label>
+					<div class="col-sm-6">
+						<!-- <input class="datepicker form-control" type="text" ng-model="sectionEdit.toDate" /> -->
+
+						<input type="text" ng-click="open4()" class="form-control"
+							uib-datepicker-popup="{{formatDate}}"
+							ng-model="sectionEdit.toDate" is-open="popup4.opened"
+							datepicker-options="dateOptions" close-text="Close"
+							alt-input-formats="altInputDateFormats" />
+					</div>
+				</div>
+
+				<button type="button" ng-click="updateSection()" id="sectionModalId"
+					ng-show="!sectionIsAdd" class="btn btn-default btn-rounded-deep">Update</button>
+
+				<button type="button" ng-click="addSection()" ng-show="sectionIsAdd"
+					class="btn btn-default btn-rounded-deep">Save</button>
+
+				<button type="button" class="btn btn-default btn-rounded-deep"
+					ng-click="cancleSection()" data-dismiss="modal">{{isSave ?
+					'Close' : 'Cancel'}}</button>
+					
+					
+				</modal>
+				
+				<modal title="Duplicate Course" visible="showModalCloneCourse">
+
+				<div ng-show="alertMessage">
+					<div ng-show="sectionIsAdd" class="alert alert-success"
+						role="alert">Add successfully!</div>
+				</div>
+
+				<div class="form-group row">
+					<label class="col-sm-4  form-control-label" for="name">Category</label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control"
+							ng-model="courseClone.category" disabled="disabled" />
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label for="end" class="col-sm-4  form-control-label">Start
+						Date</label>
+					<div class="col-sm-6">
+						<!-- <input class="datepicker form-control" type="text" ng-model="sectionEdit.startDate" /> -->
+						<input type="text" ng-click="open3()" class="form-control"
+							uib-datepicker-popup="{{formatDate}}"
+							ng-model="courseClone.startDate" is-open="popup3.opened"
+							datepicker-options="dateOptions" close-text="Close"
+							alt-input-formats="altInputDateFormats" />
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="start" class="col-sm-4  form-control-label">End
+						Date</label>
+					<div class="col-sm-6">
+						<!-- <input class="datepicker form-control" type="text" ng-model="sectionEdit.toDate" /> -->
+
+						<input type="text" ng-click="open4()" class="form-control"
+							uib-datepicker-popup="{{formatDate}}"
+							ng-model="courseClone.endDate" is-open="popup4.opened"
+							datepicker-options="dateOptions" close-text="Close"
+							alt-input-formats="altInputDateFormats" />
+					</div>
+				</div>
+
+				<button type="button" ng-click="createCourseClone()"
+					class="btn btn-default btn-rounded-deep">Save</button>
+
+				<button type="button" class="btn btn-default btn-rounded-deep"
+					data-dismiss="modal">Close</button>
+					
+					
+				</modal>
+				<div class="row">
+				<div class="col-md-12">
+				<ol class="breadcrumb m-b-0">
+					<li><a href="/index" th:href="@{/index}">Home</a></li>
+					<li><a href="#/list">Course Manager</a></li>
+					<li class="active" ng-show="isAddCourse">Add cource</li>
+					<li class="active" ng-show="!isAddCourse">Edit cource</li>
+				</ol></div>
+				</div>
+<!-- 				<div class="row" style="margin-top: -28px; float: right"> -->
+<!-- 					<div class="col-md-12"> -->
+<!-- 						<button class="btn btn-secondary  btn-rounded-deep right" -->
+<!-- 							ng-click="deleteCourse(courses.courseId)" ng-show="!isAddCourse"><i class="material-icons">delete</i>DELETE</button> -->
+<!-- 						<button ng-click="saveCourse()" -->
+<!-- 							class="btn btn-secondary btn-rounded-deep right" -->
+<!-- 							style="margin-right: 10px" ng-disabled="courseForm.$invalid"><i class="material-icons">save</i>SAVE</button> -->
+
+<!-- 					</div> -->
+<!-- 				</div> -->
+				<div class="media  top-20 left">
+					<!-- <div class="media-body">
+					<h1 class="page-heading h2">Course Form</h1>
+				</div> -->
+
+					<div ng-show="saveSuccess" class="alert alert-success" role="alert">
+						Save successfully!</div>
+					<div ng-show="saveFailed" class="alert alert-danger" role="alert">
+						Save Failed!</div>
+
+				</div>
+				<div class="row  top-20 left">
+					<div class="row-fluid">
+						<div class="col-md-5"  style="margin-top: -50px; float: right">
+							<button class="btn btn-secondary  btn-rounded-deep right" type="button"
+								ng-click="openDuplicateCourse(courses)" ng-hide="isAddCourse"><i class="material-icons">library_add</i>CLONE</button>
+							<button ng-click="deleteCourse(courses.courseId)" ng-hide="isAddCourse"
+							class="btn btn-secondary  btn-rounded-deep right" style="margin-right: 10px" type="button"><i class="material-icons">delete</i>DELETE</button>
+							<button ng-click="saveCourse()" type="submit"
+								class="btn btn-secondary btn-rounded-deep right"
+								style="margin-right: 10px" ng-disabled="courseForm.$invalid"><i class="material-icons">save</i>SAVE</button>
+						</div>
+					</div>
+					<div class="col-md-8">
+						<div class="card">
+							<div class="card-header">
+								<h4 class="card-title">Basic Information</h4>
+							</div>
+							<div class="card-block">
+
+								<div class="form-group">
+									<label for="title">Title</label> <input type="text"
+										class="form-control" placeholder="Write a title"
+										ng-model="courses.title" required="true" />
+								</div>
+
+								<div class="form-group">
+
+									<label for="details">Description</label>
+									<summernote config="summerNoteOptions"
+										ng-model="courses.descriptionAsString" required="true"></summernote>
+
+								</div>
+
+								<div class="form-group">
+
+									<label for="shortDescription">Short Description</label>
+									<textarea class="form-control"
+										ng-model="courses.shortDescription" required="true"
+										ng-maxlength="2000"></textarea>
+
+								</div>
+
+								<div class="form-group">
+									<div class="row">
+										<div class="col-md-12">
+											<label for="details">Thumbnail</label>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-9">
+											<label class="file"> <input type="file"
+												id="fileupload" name="files[]" th:attr="data-url=@{/file/upload}" />
+												<span class="file-custom"></span>
+											</label>
+										</div>
+									</div>
+									
+
+									<div id="progress" style="display: none">
+										<progress class="progress progress-striped progress-primary"
+											value="0" max="100"></progress>
+									</div>
+
+									<div class="row" id="uploaded-files">
+										<div class="form-group">
+
+											<div class="col-sm-3">
+												<img ng-src="{{loadfile(courses.icon)}}"
+													width="100" height="80" />
+												
+											</div>
+											<div class="col-sm-9">
+												<span>{{::courses.icon}}</span>
+											</div>
+											<input type="hidden" id="courseIcon"
+												value="{{::courses.icon}}" />
+										</div>
+
+									</div>
+
+								</div>
+
+								<!-- using for mutil choice -->
+								<!-- <div class="row">
+								
+								<table id="uploaded-files" class="table">
+									<thead>
+										<tr>
+											<th>File Name</th>
+											<th>File Size</th>
+											<th>File Type</th>
+											<th>Action</th>
+										</tr>	
+									</thead>
+									
+								</table>
+							</div> -->
+								<div class="row form-group">
+									<div class="col-md-6">
+										<label for="title">Trainers</label>
+										<div class="row-fluid">
+											<bootstrap-tagsinput ng-model="trainers"
+												typeahead-source="queryTrainers" tagclass="getTagClass"
+												itemvalue="userId" itemtext="fullName"></bootstrap-tagsinput>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<label for="title">Trainees</label>
+										<div class="row-fluid">
+											<bootstrap-tagsinput ng-model="trainees"
+												typeahead-source="queryTrainees" tagclass="getTagClass"
+												itemvalue="userId" itemtext="fullName"></bootstrap-tagsinput>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+						<!-- sections -->
+						<div id="sectionDiv" ng-hide="isAddCourse">
+
+							<div class="card" ng-repeat="section in sections">
+								<div class="card-header">
+									<div class="row card-title">
+										<div class="col-xs-7">
+											<h4 class="card-title">{{section.title}}</h4>
+										</div>
+										<div class="col-xs-5">
+											<a href="javascript:void(0)"
+												ng-click="removeSection(section)"
+												class="btn btn-white btn-sm pull-xs-right"><i
+												class="material-icons" title="Delete">delete</i></a> <a
+												ng-click="openSection(section)"
+												class="btn btn-white btn-sm pull-xs-right"><i
+												class="material-icons" title="Edit">edit</i></a> <a
+												ng-href="#/{{::courses.courseId}}/section/{{::section.sectionId}}/topic/add/{{section.startDate}}/{{section.toDate}}"
+												class="btn btn-white btn-sm pull-xs-right"><i
+												class="material-icons" title="New topic">add</i></a>
+										</div>
+									</div>
+								</div>
+
+								<div class="card-block">
+
+									<div class="form-group" ng-show="section.sectionId != null">
+
+									</div>
+
+									<div class="row-fluid" ng-show="section.sectionId == null">
+
+										<div class="alert alert-warning" role="alert">
+											<strong>Warning!</strong> Save course before create topic.
+										</div>
+										<div class="row-fluid">
+											<button ng-click="saveCourse()"
+												class="btn btn-success btn-rounded"
+												ng-disabled="courseForm.$invalid"><i class="material-icons">save</i>SAVE</button>
+										</div>
+									</div>
+									<div class="nestable" id="nestable-handles">
+										<ul class="nestable-list">
+											<li class="nestable-item nestable-item-handle"
+												ng-repeat="topic in section.topics" data-id="{{$index}}">
+												<div class="nestable-handle">
+													<i class="material-icons">menu</i>
+												</div>
+												<div class="nestable-content">
+													<div class="media row">
+														
+														<div class="col-xs-10">
+															<h5 class="card-title h6 m-b-0">
+																<span>{{topic.title}}</span>
+															</h5>
+															<!-- <small class="text-muted">updated 1 month ago</small> -->
+														</div>
+														<div class="col-xs-2">
+															<a href="javascript:void(0)"
+																ng-click="removeTopic(topic, $parent.$index)"
+																class="pull-xs-right"><i class="fa fa-times"></i></a> <a
+																ng-href="#/{{::courses.courseId}}/section/{{::section.sectionId}}/topic/edit/{{::topic.topicId}}"
+																class="btn btn-white btn-sm pull-xs-right"><i
+																class="material-icons">edit</i></a>
+														</div>
+													</div>
+												</div>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<button type="button"
+									class="btn btn-sm btn-default btn-rounded-deep btn-sm right"
+									ng-click="addSectionFragment()" style="margin-bottom: 10px;">
+									Add Section <i class="material-icons">add</i>
+								</button>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-xs-12 center">
+								<button ng-click="saveCourse()"
+									class="btn btn-secondary btn-rounded-deep "
+									ng-disabled="courseForm.$invalid"><i class="material-icons">save</i>SAVE</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4">
+						<div class="card">
+							<div class="card-header">
+								<h4 class="card-title">Extra Information</h4>
+								<!-- <p class="card-subtitle">Options</p> -->
+							</div>
+
+							<div class="card-block">
+								<div class="form-group row">
+									<label for="course_code" class="col-sm-6 form-control-label">Course
+										Code</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control"
+											ng-model="courses.courseCode" disabled="disabled" />
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="select" class="col-sm-6  form-control-label">Category</label>
+									<div class="col-sm-6">
+										<select class="c-select form-control"
+											ng-model="courses.category" required="true">
+											<option >Service Training</option>
+											<option >Sale Training</option>
+											<option >Advanced techniques</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group row">
+									<label for="start" class="col-sm-6  form-control-label">Start
+										Date</label>
+									<div class="col-sm-6">
+
+
+										<input type="text" ng-click="open1()" class="form-control"
+											uib-datepicker-popup="{{formatDate}}"
+											ng-model="courses.startDate" is-open="popup1.opened"
+											datepicker-options="dateOptions" ng-required="true"
+											close-text="Close" alt-input-formats="altInputDateFormats" />
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="end" class="col-sm-6  form-control-label">End
+										Date</label>
+									<div class="col-sm-6">
+
+										<input type="text" ng-click="open2()" class="form-control"
+											uib-datepicker-popup="{{formatDate}}"
+											ng-model="courses.endDate" is-open="popup2.opened"
+											datepicker-options="dateOptions" ng-required="true"
+											close-text="Close" alt-input-formats="altInputDateFormats" />
+
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+
+		</form>
+	</div>
+</div>
+</body>
+
+
+</html>

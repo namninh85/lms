@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	layout:decorator="template/layout"
+	xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org">
+<!-- Body -->
+<body>
+	
+	<!-- Content -->
+	<div class="layout-content" data-scrollable="true"
+		layout:fragment="content">
+
+
+		<div class="container-fluid" ng-app="lms.trainee"
+			ng-controller="TraineeController">
+
+			<ol class="breadcrumb m-b-0">
+				<li><a href="#" th:href="@{/index}">Home</a></li>
+				<li><a href="#" class="active"
+					th:href="@{/#/trainee/my-courses}">My Courses</a></li>
+				<li><a href="#" class="active"
+					th:href="@{/trainee/take-course} + '/' + ${course.courseId}"><span
+						th:text="${course.title}">Course Name</span></a></li>
+				<li><span th:text="${topic.title}">Topic Name</span></li>
+
+			</ol>
+			<!-- Text -->
+
+			<h1 class="page-heading h2" th:text="${topic.title}"
+				th:with="courseId=${course.courseId}"></h1>
+			<div class="row">
+				<div class="col-md-8">
+					<div class="card">
+
+						<div class="card-block" th:utext="${topic.descriptionAsString}">
+							Description</div>
+					</div>
+
+					<!-- Lessons -->
+					<div class="card">
+						<ul class="list-group">
+							<li class="list-group-item"
+								th:each="materialBean,materialStat : *{materials}">
+								<div class="media" th:switch="${materialBean.material.type}">
+									<!-- File -->
+									<div class="media-body" th:case="2">
+										<div class="media">
+											<div class="media-left">
+												<div class="text-muted"
+													th:text="${(materialStat.index + 1) + '.' }">1.</div>
+											</div>
+											<div class="media-body">
+												<a href="#"
+													th:href="${'../../download/material/' + course.courseId + '/' + materialBean.material.materialId }" th:if="${#dates.format(topic.endDate,'yyyyMMdd') ge #dates.format(#calendars.createNow(),'yyyyMMdd')}"
+													th:text="${materialBean.material.materialName}" target="_blank" onclick="refreshPage();"></a>
+												<span th:if="${#dates.format(topic.endDate,'yyyyMMdd') lt #dates.format(#calendars.createNow(),'yyyyMMdd')}" th:text="${materialBean.material.materialName}">
+												
+												</span>
+											</div>
+
+										</div>
+
+										<div class="media-body">
+											<div class="media-left">
+												<div>
+													<small class="text-muted-light">Downloaded (<span th:if="${materialBean.traineeMaterial!=null}" th:text="${materialBean.traineeMaterial.noViewed}">0</span><span th:if="${materialBean.traineeMaterial==null}">0</span>)</small>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="media-body" th:case="3">
+										<div class="media">
+											<div class="media-left">
+												<div class="text-muted"
+													th:text="${(materialStat.index + 1) + '.' }">1.</div>
+											</div>
+											<div class="media-body">
+												<a href="#" th:text="${materialBean.material.materialName}"></a>
+											</div>
+											<div class="media-right">
+												
+											</div>
+										</div>
+
+										<div class="media-body">
+											<iframe th:id="@{'video'} + ${materialBean.material.materialId}"
+												width="100%" height="315"> </iframe>
+											<script th:inline="javascript">
+					/*<![CDATA[*/
+						var url = /*[[${materialBean.material.path}]]*/ 'path';
+						url = url.replace("/watch?v=", "/embed/");
+						var mid = /*[[${materialBean.material.materialId}]]*/ 0;
+						/*]]>*/
+						
+						document.getElementById('video' + mid).src = url;
+					</script>
+
+
+
+										</div>
+									</div>
+
+
+									<div class="media-body" th:case="1">
+										<div class="media">
+											<div class="media-left">
+												<div class="text-muted"
+													th:text="${(materialStat.index + 1) + '.' }">1.</div>
+											</div>
+											<div class="media-body">
+												<h4 class="card-title car-title-bg-black" th:text= "${materialBean.material.materialName}">File name</h4>
+											</div>
+											<div class="media-right">
+												
+											</div>
+										</div>
+
+
+
+										<div class="media-body"
+											th:utext="${materialBean.material.materialDataAsString}"></div>
+									</div>
+									<div class="media-body" th:case="4">
+											<div class="media">
+												<div class="media-left">
+													<div class="text-muted"
+														th:text="${(materialStat.index + 1) + '.' }">1.</div>
+												</div>
+												<div class="media-body">
+													<h4 class="card-title car-title-bg-black" th:text= "'Quiz: ' + ${materialBean.material.materialName}"></h4>
+													<p class="card-subtitle" th:if="${materialBean.traineeMaterial!=null}">
+														Your Performance : <span th:if ="${materialBean.traineeMaterial.traineeQuiz != null and materialBean.traineeMaterial.traineeQuiz.percentScore !=null}"
+															th:text="${materialBean.traineeMaterial.traineeQuiz.percentScore} + '%'" /> (Passing grade: <span th:text="${#numbers.formatInteger(materialBean.material.quizTemplate.passingGrade*100,2)}" />% )
+													</p>
+													<p class="card-subtitle" th:if="${materialBean.traineeMaterial!=null}" >
+														Number of attempts :  <span th:text="${materialBean.traineeMaterial.noViewed}"/>
+													</p>
+												</div>
+												<div class="media-right media-middle" th:if="${#dates.format(topic.endDate,'yyyyMMdd') ge #dates.format(#calendars.createNow(),'yyyyMMdd')}">
+													<a class="btn btn-secondary btn-rounded pull-xs-right" th:if="${materialBean.traineeMaterial==null}"
+														href="take-quiz.html"
+														th:href="@{/trainee/take-quiz/} + ${course.courseId} + '/' + ${topic.topicId} + '/' + ${materialBean.material.materialId}">
+														Start</a>
+										
+													<a class="btn btn-secondary btn-rounded pull-xs-right" th:if="${materialBean.traineeMaterial!=null and materialBean.traineeMaterial.traineeQuiz.retryLeft > 0}"
+														href="take-quiz.html"
+														th:href="@{/trainee/take-quiz/} + ${course.courseId} + '/' + ${topic.topicId} + '/' + ${materialBean.material.materialId}">
+														Retry</a>	
+												</div>
+											</div>
+
+									</div>
+
+								</div>
+							</li>
+						</ul>
+					</div>
+
+					<div class="media-left" th:if="${nextTopic != null}" th:switch="${nextTopic.lock}">
+						<span th:case="true">
+							Next Topic: <span th:text="${nextTopic.topic.title}"></span>
+							<span class="label label-pill label-warning m-b-05">Locked</span>
+						</span>
+						<span th:case="false">
+							Next Topic: <a th:href="@{/trainee/view-topic/} + ${course.courseId} + '/' + ${nextTopic.topic.topicId}" th:text="${nextTopic.topic.title}"></a>
+							</span>
+					</div>
+				</div>
+				<div class="col-md-4">
+
+					<div class="card" th:each="trainer,trainerStat : *{trainerList}">
+						<div class="card-header bg-white">
+							<div class="media">
+								<div class="media-left media-middle">
+									<img src="assets/images/people/110/guy-6.jpg"
+										th:src="@{/resources/images/people/110/guy-6.jpg}" alt="About"
+										width="50" class="img-circle" />
+								</div>
+								<div class="media-body media-middle">
+									<h4 class="card-title">
+										<a href="#" th:text="${trainer.fullName}">Trainer Name</a>
+									</h4>
+									<p class="card-subtitle">Trainer</p>
+								</div>
+							</div>
+						</div>
+						<div class="card-block">
+							<p>
+								<span th:text="${trainer.shortDescription}"></span>
+							</p>
+							<a href="#" class="btn btn-default"> <i
+								class="fa fa-facebook"></i>
+							</a> <a href="#" class="btn btn-default"> <i
+								class="fa fa-twitter"></i>
+							</a> <a href="#" class="btn btn-default"><i class="fa fa-github"></i></a>
+						</div>
+					</div>
+
+					<div class="card">
+						<ul class="list-group list-group-fit">
+
+							<li class="list-group-item">
+								<div class="media">
+									<div class="media-left">
+										<i class="material-icons text-muted-light">schedule</i>
+									</div>
+									<div class="media-body media-middle">
+										End Date: <span th:text="${course.endDate}"></span>
+
+									</div>
+								</div>
+							</li>
+							<li class="list-group-item">
+								<div class="media">
+									<div class="media-left">
+										<i class="material-icons text-muted-light">schedule</i>
+									</div>
+									<div class="media-body media-middle">
+										Course code: <span th:text="${course.courseCode}"></span>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+
+					<div class="card">
+						<div class="card-header">
+							<h4 class="card-title">Ratings</h4>
+						</div>
+						<div class="card-block">
+							<div>
+								<i class="material-icons text-warning md-18">star</i> <i
+									class="material-icons text-warning md-18">star</i> <i
+									class="material-icons text-warning md-18">star</i> <i
+									class="material-icons text-warning md-18">star</i> <i
+									class="material-icons text-warning md-18">star_border</i>
+							</div>
+							<small class="text-muted">20 ratings</small>
+						</div>
+					</div>
+				<script>
+				function refreshPage() {
+					location.reload();
+				}
+		</script>
+
+				</div>
+			</div>
+			
+		</div>
+		
+
+
+	</div>
+
+</body>
+<!-- End -->
+</html>

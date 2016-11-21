@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.thymeleaf.org">
+<body>
+	<div th:fragment="pagging">
+		<ul class="pagination" th:if="*{paging ne null and !#lists.isEmpty(listResult)}">
+		 	<li th:class="*{(paging.currentPage eq null or paging.currentPage le 1)?'disabled':''}">
+			  	<a href="#" th:with="page=*{paging.currentPage eq null?1:(paging.currentPage>1?paging.currentPage-1:1)}" th:attr="onclick=${changePageJsfunction}+'('+ ${page}+');return false;'">
+			  		<span > Trang trước</span>
+			  	</a>
+		  	</li>
+		  	<li th:unless="*{paging.currentPage eq null or paging.currentPage-1 le 2}">
+		  		<a href="#" th:text="*{1}" th:attr="onclick=${changePageJsfunction}+'(1);return false;'"></a>
+		  		<span>...</span>
+		  	</li>
+			<li th:if="*{(paging.currentPage ne null) and (paging.currentPage-2 > 0)}">
+				<a href="#" th:text="*{paging.currentPage-2}" th:attr="onclick=${changePageJsfunction}+'('+ *{paging.currentPage-2}+');return false;'">current-2</a>
+			</li>
+			<li th:if="*{(paging.currentPage ne null) and (paging.currentPage-1 > 0)}">
+			<a href="#" th:text="*{paging.currentPage-1}" th:attr="onclick=${changePageJsfunction}+'('+ *{paging.currentPage-1}+');return false;'">current-1</a>
+			</li>
+		  	<li th:if="*{paging.maxPage>=1}" class="active">
+		  		<a href="#" th:text="*{paging.currentPage ne null?paging.currentPage:1}"  th:attr="onclick=${changePageJsfunction}+'('+ *{paging.currentPage ne null?paging.currentPage:1}+');return false;'">current</a>
+		  	</li>
+		  	<li th:if="*{paging.maxPage>=2 and (paging.currentPage ne null?paging.maxPage>=(paging.currentPage+1):paging.maxPage>=2)}">
+		  		<a href="#" th:text="*{(paging.currentPage ne null)?paging.currentPage+1:2}" th:attr="onclick=${changePageJsfunction}+'('+ *{(paging.currentPage ne null)?paging.currentPage+1:2}+');return false;'">current+1</a>
+		  	</li>
+		  	<li th:if="*{paging.maxPage>=3 and (paging.currentPage ne null?paging.maxPage>=(paging.currentPage+2):paging.maxPage>=3)}">
+		  		<a href="#" th:text="*{(paging.currentPage ne null)?paging.currentPage+2:3}" th:attr="onclick=${changePageJsfunction}+'('+ *{(paging.currentPage ne null)?paging.currentPage+2:3}+');return false;'">current+2</a>
+		  	</li>
+		  	<li th:unless="*{paging.currentPage eq null or (paging.currentPage ne null and paging.maxPage-paging.currentPage le 2)}">
+		  		<span>...</span>
+		  		<a href="#"  th:attr="onclick=${changePageJsfunction}+'('+ *{paging.maxPage} +');return false;'" th:text="*{paging.maxPage}"></a>
+		  	</li>
+		  	<li th:class="*{(paging.maxPage>=2 and (paging.currentPage ne null?paging.maxPage>=(paging.currentPage+1):paging.maxPage>=2))?'':'disabled'}">
+			  <a href="#" th:with="page=*{paging.currentPage eq null?2:(paging.maxPage>paging.currentPage?paging.currentPage+1:paging.currentPage)}"  th:attr="onclick=${changePageJsfunction}+'('+ ${page}+');return false;'">
+				  Trang sau 
+			  </a>
+		  	</li>
+		</ul>
+	</div>
+</body>
+
+</html>

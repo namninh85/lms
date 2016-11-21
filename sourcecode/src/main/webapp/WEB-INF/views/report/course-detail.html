@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	layout:decorator="template/layout"
+	xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org">
+<!-- Body -->
+<body>
+	<!-- Content -->
+	<div class="layout-content" data-scrollable="true"
+		th:fragment="content">
+		<div class="container-fluid">
+
+			<ol class="breadcrumb">
+				<li><a th:href="@{/index}">Home</a></li>
+        		<li><a href="#/course-report" class="active">Course Report</a></li>       		
+        
+			</ol>
+			<div class="card">
+			<!-- 
+				<ul class="nav nav-tabs">
+					<li class="nav-item"><a class="nav-link active" href="#one"
+						data-toggle="tab">Course report</a></li>
+					<li class="nav-item"><a class="nav-link" href="#two"
+						data-toggle="tab">Other report</a></li>
+				</ul>
+				 -->
+				 
+				<div class="tab-content p-a-1 m-b-1">
+					<div class="tab-pane active" id="one">
+					
+						<div class="table-responsive">
+							<table class="table table-bordered table-hover table-sm"
+								id="tableExport" ng-table="quizList">
+								<tr ng-repeat="quiz in $data">
+									<td data-title="'No.'" class="center">{{$index+1}}</td>
+									<td data-title="'Section'">{{quiz.sectionTitle}}</td>
+									<td data-title="'Topic'">{{quiz.topicTitle}}</td>									
+									<td data-title="'Quiz'"><a href="#/quiz-report/{{courseId}}/{{quiz.materialId}}">{{quiz.quizTitle}}</a></td>
+									<!-- 
+									<td class="text-right" data-title="'Passed'"><a
+										href="#/quiz-report/{{course.courseId}}">Quiz Report</a></td>
+										 -->
+								</tr>
+							</table>
+						</div>
+						
+					</div>
+					<div class="tab-pane" id="two">
+						<div class="table-responsive">
+							Report đặt ở đây
+						</div>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+
+			</div>
+		</div>
+
+	</div>
+
+
+</body>
+<!-- End -->
+</html>

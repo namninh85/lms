@@ -1,0 +1,69 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org">
+<!-- Body -->
+<body>
+	<!-- Content -->
+	<div class="layout-content" data-scrollable="true"
+		th:fragment="content">
+
+		<div dw-loading="courses" dw-loading-options="{text: 'Waiting...'}"
+			class="container-fluid">
+			<div class="row-fluid">
+			<div class="col-xs-7">
+				<ol class="breadcrumb m-b-0 top-5">
+					<li><a th:href="@{/index}">Home</a></li>
+					<li class="active">Courses</li>
+				</ol></div>
+				<div class="col-xs-5 right">
+				<a class="btn btn-secondary btn-sm btn-rounded right" href="#/new"><i class="material-icons">note_add</i>New Course</a>
+				</div>
+			</div>
+			
+<!-- 			<div class="media"> -->
+<!-- 				<div class="media-body"> -->
+<!-- 					<h1 class="page-heading h2">Manage Courses</h1> -->
+<!-- 				</div> -->
+<!-- 				<div class="media-right media-middle"> -->
+					
+<!-- 				</div> -->
+<!-- 			</div> -->
+
+			<div class="alert alert-info top-20 left" style="width:100%" ng-show="courses.data.length == 0">
+			<div class="col-md-12">No course entry found</div></div>
+			<div>
+			
+				<table ng-table="courses" class="top-20 left"  style="width:100%">
+					<tr class="col-sm-4" ng-repeat="row in $data">
+						<td>
+							<div class="card">
+								<div class="card-header bg-white">
+									<a href="#/edit/{{::row.courseId}}" data-toggle="tooltip" title="{{::row.shortDescription}}"> 
+										<img ng-show="row.icon" ng-src="{{loadfile(row.icon)}}" class="cource-img" />
+										<img ng-show="!row.icon" th:src="@{/resources/images/vuejs.png}" class="cource-img" />
+									</a>
+									<h6 class="center cource-tt1">
+										<a href="#/edit/{{::row.courseId}}"
+											style="color: black !important">{{::row.title}}</a>
+									</h6>
+									<span class="label label-default">
+										{{::row.numberSections}} section </span> <a
+										href="#/edit/{{::row.courseId}}"
+										class="btn btn-link btn-sm right" style="right: 0">Edit</a>
+
+									
+
+								</div>
+
+							</div>
+						</td>
+					</tr>
+
+				</table>
+			</div>
+		</div>
+	</div>
+
+</body>
+<!-- End -->
+</html>

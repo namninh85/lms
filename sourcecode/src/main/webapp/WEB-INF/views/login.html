@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html>
+
+
+<!-- Mirrored from learnplus.themekit.io/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 02 Apr 2016 08:52:20 GMT -->
+<!-- Added by HTTrack -->
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<!-- /Added by HTTrack -->
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<title>Login/Signup</title>
+
+<meta name="robots" content="noindex" />
+
+<!-- Material Design Icons  -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet" />
+
+<!-- Roboto Web Font -->
+<link
+	href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en"
+	rel="stylesheet" />
+
+<!-- App CSS -->
+<link type="text/css" href="assets/css/style.min.css" rel="stylesheet"
+	th:href="@{/resources/css/style.min.css}" />
+
+<link rel="stylesheet"
+	th:href="@{/resources/vendor/font-awesome/font-awesome.min.css}" />
+
+</head>
+
+<body class="login">
+
+	<div class="container-fluid">
+
+		<div class="login-block">
+			<div class="card">
+				<div class="card-header center">
+					<img class="img-logo-login" title="Wall Street English"
+						src="assets/images/logo-tablet.png"
+						th:src="@{/resources/images/logo-tablet.png}" />
+					<!--         <h4>LOGIN</h4> -->
+					<!--           <h4 class="card-title card-title-login">Welcome to</h4> -->
+					<!--           <p class="card-subtitle card-subtitle-login">eWSI Online Services</p> -->
+				</div>
+
+				<div class="p-a-2">
+					<div class="row">
+						<form action="/j_spring_security_check" method="post"
+								th:action="@{/j_spring_security_check}">
+							<div class="form-group">
+								<div class="input-group">
+									<span class="input-group-addon" id="basic-addon3"> <i
+										class="material-icons md-18 text-muted">mail</i>
+									</span> <input type="email" class="form-control"
+										placeholder="Email Address" name="j_username" />
+								</div>
+								<!--               <input type="email" class="form-control" placeholder="Email Address" name="j_username"/> -->
+							</div>
+							<div class="form-group">
+								<div class="input-group">
+									<span class="input-group-addon" id="basic-addon3"> <i
+										class="material-icons md-18 text-muted">lock</i>
+									</span> <input type="password" class="form-control"
+										placeholder="Password" name="j_password" />
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-xs-4" style="padding: 0">
+									<button type="submit"
+										class="btn btn-success btn-rounded btn-sm "><i class="material-icons">vpn_key</i> LOGIN</button>
+								</div>
+								<div class="col-xs-8" style="padding: 0"></div>
+							</div>
+
+						</form>
+					</div>
+					<div class="row">
+						<form th:action="@{/auth/google}" method="POST" class="right">
+							<!--   <input type="hidden" th:attr="name=${_csrf.parameterName}" th:value="${_csrf.token}"/> -->
+							<button type="submit" class="btn btn-default btn-rounded btn-sm"
+								style="margin-top: -50px">
+								<i class="fa fa-google"></i><span class="icon-text"> Login
+									with Google</span>
+							</button>
+							<input type="hidden" name="scope"
+								value="email https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file https://spreadsheets.google.com/feeds https://docs.google.com/feeds" />
+							<input type="hidden" name="access_type" value="offline" />
+						</form>
+					</div>
+					<div class="row">
+						<a href="#"> <small></small>
+						</a>
+
+					</div>
+				</div>
+
+				<div class="card-footer center">
+					<span>Not yet a student?</span> <a href="user/register/local">Sign
+						up</a>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+	<!-- jQuery -->
+	<script src="../../../resources/vendor/jquery.min.js"
+		th:src="@{/resources/vendor/jquery.min.js}"></script>
+
+	<!-- Bootstrap -->
+	<script src="../../../resources/vendor/tether.min.js"
+		th:src="@{/resources/vendor/tether.min.js}"></script>
+	<script src="../../../resources/vendor/bootstrap.min.js"
+		th:src="@{/resources/vendor/bootstrap.min.js}"></script>
+
+	<!-- AdminPlus -->
+	<script src="../../../resources/vendor/adminplus.js"
+		th:src="@{/resources/vendor/adminplus.js}"></script>
+
+	<!-- App JS -->
+	<script src="../../../resources/js/main.min.js"
+		th:src="@{/resources/js/main.min.js}"></script>
+
+
+</body>
+
+
+<!-- Mirrored from learnplus.themekit.io/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 02 Apr 2016 08:52:21 GMT -->
+</html>

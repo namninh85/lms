@@ -1,0 +1,9 @@
+.list {
+	list-style: none outside none;
+	    margin: 0px;
+	        padding: 0px;
+}
+
+.handle {
+	cursor: move;
+}

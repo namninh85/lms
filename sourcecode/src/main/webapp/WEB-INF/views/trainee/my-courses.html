@@ -1,0 +1,73 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org">
+
+<!-- Body -->
+<body>
+	<!-- Content -->
+	<div class="layout-content" ng-app="lms.trainee" data-scrollable="true" th:fragment="content">
+
+		<div class="container-fluid">
+		<div class="col-sm-12">
+			<ol class="breadcrumb m-b-0">
+				<li><a th:href="@{/index}">Home</a></li>
+				<li class="active">My Courses</li>
+			</ol>
+			</div>
+			
+			<table ng-table="mycourses" class="top-20 left">
+				<tr >
+			        <td ng-show="$data.length==0" >
+			        <div class="alert alert-info">
+			            No data.                
+			        </div>
+			        </td>
+			    </tr>
+    
+    						<tr class="col-md-4" ng-repeat="course in $data">
+    							<td>
+    								<div class="card">
+
+							<div class="card-header bg-white">
+								
+								<a href="trainee/take-course/{{::course.courseId}}" class="cource-link"> 
+								<div class=" cource-tt">
+									<h6 class="center">
+										<a href="trainee/take-course/{{::course.courseId}}" style="color:black">{{::course.title}}</a>
+									</h6>
+									<div class="center">
+										<i class="material-icons text-warning md-18">star</i> <i
+											class="material-icons text-warning md-18">star</i> <i
+											class="material-icons text-warning md-18">star</i> <i
+											class="material-icons text-warning md-18">star</i> <i
+											class="material-icons text-warning md-18">star_border</i>
+									</div>
+								</div>
+								<img src="assets/images/vuejs.png" ng-if="course.icon" class="cource-img" 
+									ng-src="{{loadfile(course.icon)}}"
+									alt="Course Icon" />
+									<img src="assets/images/vuejs.png" ng-if="!course.icon" class="cource-img" 
+									th:src="@{/resources/images/vuejs.png}"
+									alt="Course Icon" />
+								</a>
+								<a href="trainee/take-course/{{::course.courseId}}" class="cource-link"><p class="m-b-0 cource-bt">{{::course.shortDescription}}</p></a>
+								<div>
+									<small class="text-muted">{{course.category}}</small>
+								</div>
+							</div>
+						</div>
+    							
+    							</td>
+    						</tr>
+    						
+    
+    				</table>
+    				
+		</div>
+
+
+	</div>
+
+</body>
+<!-- End -->
+</html>

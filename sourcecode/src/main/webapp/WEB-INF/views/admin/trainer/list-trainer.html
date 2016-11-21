@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	layout:decorator="template/layout"
+	xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org">
+<!-- Body -->
+<body>
+	<!-- Content -->
+	<div class="layout-content" data-scrollable="true"
+		th:fragment="content">
+		<div class="container-fluid">
+
+			<ol class="breadcrumb">
+				<li><a href="#">Home</a></li>
+				<li class="active">Trainer management</li>
+			</ol>
+			<!-- <div class="media">
+				<div class="media-body">
+					<h1 class="page-heading h2">Manage Trainer</h1>
+				</div>
+				<div class="media-right media-middle">
+					
+				</div>
+			</div> -->
+			<div class="card">
+				<div class="card-header">
+					<h5 class="card-title">List of trainers</h5>
+					<a class="btn btn-link right" style="margin-top:-25px;"  href="#/new">New trainer <!-- <i class="material-icons">add</i> --></a>
+				</div>
+				<div class="table-responsive"> 
+					<table class="table table-bordered table-hover table-sm" ng-table="usersTable" show-filter="true">
+						<tr ng-repeat="trainer in data">
+						  <td data-title="'No.'" class="center">{{$index+1}}</td>
+				          <td data-title="'Email'" sortable="'email'" filter="{ 'email': 'text'}">{{trainer.email}}</td>
+				          <td data-title="'Full Name'" sortable="'fullName'" filter="{ 'fullName': 'text'}">{{trainer.fullName}}</td>
+				          <td data-title="'Birthday'"  class="center" sortable="'dob'" filter="{ 'dob': 'text'}">{{trainer.dob | date:'MM/dd/yyyy'}}</td>
+							<td  class="center">
+									<a class="btn btn-default btn-sm" href="#/edit/{{trainer.userId}}"><i class="material-icons">edit</i></a>
+									<button class="btn btn-default btn-sm" ng-click="deleteTrainer(trainer.userId)"><i class="material-icons">delete</i></button>
+									
+								</td>
+				        </tr>
+					</table>
+				</div>
+				<div class="row"></div>
+
+				<div class="clearfix"></div>
+			</div>
+		</div>
+
+	</div>
+
+
+</body>
+<!-- End -->
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	layout:decorator="template/layout"
+	xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org">
+<!-- Body -->
+<body>
+
+	<!-- Content -->
+	<div class="layout-content" data-scrollable="true" ng-app="lms.quiz-review" ng-controller="QuizReviewController"
+		layout:fragment="content">
+
+
+		<div class="layout-content" data-scrollable="true">
+			<style>
+input:invalid {
+	border: 1px solid red;
+}
+
+.full button span {
+	background-color: limegreen;
+	border-radius: 32px;
+	color: black;
+}
+
+.partially button span {
+	background-color: orange;
+	border-radius: 32px;
+	color: black;
+}
+</style>
+<form action="#" class="form-horizontal">
+			<input type="hidden" th:value="${courseId}" name="courseId" id="courseId" /> 
+			<input type="hidden" th:value="${topicId}" name="topicId" id="topicId" /> 
+			<input type="hidden" th:value="${quizMaterialId}" name="quizMaterialId" id="quizMaterialId" /> 
+			
+			<div dw-loading="quiz-review" dw-loading-options="{text: 'Waiting...'}"
+				class="container-fluid">
+				<div class="col-md-12">
+					<ol class="breadcrumb m-b-0">
+						<li><a href="#" th:href="@{/index}">Home</a></li>
+						<li><a href="#" th:href="@{/report/#/course-report}">Report</a></li>						
+					</ol>
+				</div>
+				<div class="col-md-8  top-20">
+					
+
+					<div class="card card-stats-primary" ng-if="current">
+						<div class="card-block" >Quiz Section:
+							{{current.sectionTitle}}</div>
+						<div class="card-block"
+							ng-if="current.videoLink != ''">
+							Video Link: <a href="{{current.videoLink}}"
+								target="_blank">Click here!</a>
+						</div>
+					</div>
+					<div class="btn btn-danger">YOU ARE IN REVIEW MODE</div>
+					<div class="card">
+						<div class="card-header bg-white p-a-1">
+							<div class="media">
+								<div class="media-left media-middle">
+									<h4 class="m-b-0">
+										<strong>#</strong>
+									</h4>
+								</div>
+								<div class="media-body  media-middle">
+									<h4 class="card-title">
+										<span> {{current.question}}</span></h4>
+								</div>
+							</div>
+						</div>
+						
+
+						<div class="card-block p-a-2"
+							ng-if="current.questionType=='Multiple choice' || current.questionType=='Checkbox'">
+							<!-- multiple choice -->
+							<div class="form-group" ng-repeat="ans in current.answerTemplates">
+								<label class="c-input c-checkbox"> <input
+									type="checkbox" value="{{ans.index}}"
+									ng-click="toggleSelection(ans.index)" /> <span
+									class="c-indicator"></span> {{ans.index}}) {{ans.text}}
+								</label>
+							</div>
+
+						</div>
+
+						<div class="card-block p-a-2"
+							ng-if="current.questionType=='Text'">
+							<!-- multiple choice -->
+							<div class="form-group">
+								<input type="text" name="textAns" id="textAns" ng-model="objAns.text"
+									placeholder="Write answer here" class="form-control" />
+							</div>
+
+						</div>
+
+						<div class="card-block p-a-2"
+							ng-if="current.questionType=='Single choice'">
+							<!-- multiple choice -->
+							<div class="form-group" ng-repeat="ans in current.answerTemplates">
+								<label class="c-input c-checkbox"> <input type="radio"
+									ng-model="singleAns" value="abc" id="singleChoice" name="singleChoice" ng-click="toggleSingleChoice(ans.index)"/> <span
+									class="c-indicator"></span> {{ans.index}}) {{ans.text}}
+								</label>
+							</div>
+
+						</div>
+
+
+						<div ng-if="current.questionType=='Ordering'" >
+
+							<ul ui-sortable="sortableOptions" ng-model="current.answerTemplates" style="list-style:none; margin:0; padding:10px 0; line-height:35px" class="list">
+								<li ng-repeat="ans in current.answerTemplates" class="item"><label
+									class="c-input c-checkbox"> <input type="radio"
+										value="{{ans.index}}" id="ans-id" /> <span><i class="material-icons">keyboard_arrow_down</i>{{ans.index}})  {{ans.text}}</span>
+								</label></li>
+							</ul>
+
+
+						</div>
+
+						
+
+						<div class="card-footer">
+						
+							<a href="#"
+								class="btn btn-success btn-sm" ng-click="nextQuestion()">Next<i
+								class="material-icons">navigate_next</i></a>
+							 
+						</div>
+					</div>
+
+					
+
+				</div>
+
+				<!-- Sidebar -->
+				<div class="col-md-4   top-20">
+					<!-- 
+					<div class="card">
+						<div class="sidebar-heading">STATISTCS</div>
+						<div class="col-xs-3 center">
+							<h4 class="m-b-0">
+								<strong ng-bind="quiz.total">0</strong>
+							</h4>
+							<small class="text-muted-light">TOTAL</small>
+						</div>
+						<div class="col-xs-3 text-success center">
+							<h4 class="m-b-0">
+								<strong ng-bind="quiz.correct">0</strong>
+							</h4>
+							<small class="text-muted-light">CORRECT</small>
+						</div>
+						<div class="col-xs-3 text-danger center">
+							<h4 class="m-b-0">
+								<strong ng-bind="quiz.wrong">0</strong>
+							</h4>
+							<small class="text-muted-light">WRONG</small>
+						</div>
+						<div class="col-xs-3 text-primary center">
+							<h4 class="m-b-0">
+								<strong ng-bind="quiz.left">0</strong>
+							</h4>
+							<small class="text-muted-light">LEFT</small>
+						</div>
+					</div>
+					 -->
+					<div class="card">
+						<ul class="list-group list-group-fit">
+							<li class="list-group-item sidebar-heading">Questions</li>
+							<li class="list-group-item"
+								ng-repeat="question in quiz.quizTemplate.questionTemplates"><a href="#" ng-click="viewQuestion($index)"> <span
+									class="media"> <span class="media-left" > <span
+											class="btn btn-circle" ng-class="{LowScoreBtn: quiz.rankList[$index]==0, HighScoreBtn:quiz.rankList[$index]==1}">#</span>
+									</span> <span class="media-body media-middle">
+										{{quiz.rankList[$index]}}	{{::question.question}} </span>
+								</span>
+							</a></li>
+
+						</ul>
+					</div>
+
+					<style>
+.section {
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+
+/***  Extra ***/
+.logList {
+	min-height: 200px;
+	border: 5px solid #000;
+	border-radius: 15px;
+}
+</style>
+					<!-- // END Sidebar -->
+				</div>
+				
+			</div>
+			</form>
+		</div>
+
+
+	</div>
+<script type="text/javascript">
+
+window.onready = function() {
+	setTimeout(function(){$('.countdown').tkCountdown();},5000)
+		
+	};
+
+</script>
+
+</body>
+<!-- End -->
+</html>

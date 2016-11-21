@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	layout:decorator="template/layout"
+	xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org">
+	  
+	<!-- Body -->
+	<body>
+		<!-- Content -->
+		  <div class="layout-content" data-scrollable="true" layout:fragment="content">
+        		<div ng-app="lms.trainee">
+        			<div ng-view=""></div>
+        		</div>
+		  </div>
+  
+	</body>
+	<!-- End -->
+</html>

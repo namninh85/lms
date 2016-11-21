@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	layout:decorator="template/layout"
+	xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org">
+	<head>
+	
+	</head>
+	<!-- Body -->
+	<body>
+		<!-- Content -->
+		  <div class="layout-content" data-scrollable="true" th:fragment="content">
+		  <script th:src="@{/resources/vendor/jquery.fileupload/init.js}" type="text/javascript-lazy"/>
+			<div class="container-fluid">
+
+			  <ol class="breadcrumb">
+				<li><a href="index.html">Home</a></li>
+				<li class="active">New trainer</li>
+			  </ol>
+			  <!-- <h1 class="page-heading h2">Add Trainer</h1> -->
+		
+			  <div class="card">
+			  	<div class="p-a-1">
+		          <form id="frmTrainer" method="post" enctype="multipart/form-data" ng-submit="saveTrainer()" >
+		          <div class="form-group row">
+		                <label for="avatar" class="col-sm-3 form-control-label">Avatar</label>
+		                <div class="col-sm-9">
+		                  <div class="media">
+		                    <div class="media-left ">
+		                      <div id="uploaded-files" class="icon-block">
+		                        <i class="material-icons text-muted-light md-36">photo</i>
+		                      </div>
+		                    </div>
+		                    <div class="media-body media-middle">
+		                    	<label class="file">
+                                    <input type="file" id="avatar" name="files[]" data-url="/file/upload"/>
+                                    <span class="file-custom"></span>
+                                </label>
+		                    </div>
+		                  </div>
+		                </div>
+		              </div>
+			         <div class="form-group row">
+		            	<label for="fullname" class="col-sm-3 form-control-label">Full Name</label>
+		           		<div class="col-md-6">
+			                <input type="text"  ng-model="user.fullName" class="form-control" placeholder="Full Name" name="fullName" ng-required="true"/>
+			             </div>
+		            </div>
+		              	
+		            <div class="form-group row">
+		            	<label for="email" class="col-sm-3 form-control-label">Email</label>
+		           		<div class="col-md-6">
+		           			<div class="input-group">
+		           				 <span id="basic-addon3" class="input-group-addon">
+									<i class="material-icons md-18 text-muted">mail</i>
+								</span>
+		           				<input type="email" ng-model="user.email" class="form-control" placeholder="Email" name="email" ng-required="true"/>
+		           			</div>
+			             </div>
+			            
+		            </div>
+		            
+		            <div class="form-group row">
+		            	<label for="password" class="col-sm-3 form-control-label">Password</label>
+		           		<div class="col-md-6">
+		           			<div class="input-group">
+		           				<span id="basic-addon3" class="input-group-addon">
+									<i class="material-icons md-18 text-muted">lock</i>
+								</span>
+		           				<input type="password" ng-model="user.password" class="form-control" placeholder="Password" name="password" id="password" ng-required="true" />
+		           			</div>
+			                
+			             </div>
+		            </div>
+		            <div class="form-group row">
+		            	<label for="password" class="col-sm-3 form-control-label">Confirm Password</label>
+		           		<div class="col-md-6">
+			                
+			                <div class="input-group">
+		           				<span id="basic-addon3" class="input-group-addon">
+									<i class="material-icons md-18 text-muted">lock</i>
+								</span>
+		           				<input type="password" class="form-control" ng-model="user.confirm_password" placeholder="Password" name="confirm_password" id="confirm_password" ng-required="true" />
+		           			</div>
+			             </div>
+		            </div>
+		            <div class="form-group row">
+		            	<label for="password" class="col-sm-3 form-control-label">Birthday</label>
+		           		<div class="col-md-6">
+			           		 <input type="text" ng-click="open1()" class="form-control" uib-datepicker-popup="{{formatDate}}" ng-model="user.dob" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputDateFormats"/>
+			             </div>
+		            </div>
+		            <div class="form-group row">
+		            	<label for="password" class="col-sm-3 form-control-label">Description</label>
+		           		<div class="col-md-6">
+			                <textarea class="form-control" ng-model="user.shortDescription" required="true" ng-maxlength="2000"></textarea>
+			             </div>
+		            </div>		
+		            <div class="form-group row m-b-0">
+	                  <div class="col-sm-offset-3 col-sm-3">
+		                  <button type="submit" class="btn btn-secondary btn-rounded-deep" ng-disabled="frmTrainer.$invalid">Submit</button>
+		                  <button type="button" ng-click="cancelTrainer()" class="btn btn-secondary btn-rounded-deep">Cancel</button>
+	                  </div>
+	                </div>
+	                <script>
+			                var password = document.getElementById("password")
+			                , confirm_password = document.getElementById("confirm_password");
+		
+			              function validatePassword(){
+			                if(password.value != confirm_password.value) {
+			                  confirm_password.setCustomValidity("Passwords Don't Match");
+			                } else {
+			                  confirm_password.setCustomValidity('');
+			                }
+			              }
+		
+			              password.onchange = validatePassword;
+			              confirm_password.onkeyup = validatePassword;	
+	                </script>				            
+		          </form>
+        		</div>
+			  </div>
+			</div>	
+		  </div>
+  
+	</body>
+	
+	<!-- End -->
+</html>

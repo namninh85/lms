@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	layout:decorator="template/layout"
+	xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org">
+	<!-- Body -->
+	<body>
+		<!-- Content -->
+		  <div class="layout-content" data-scrollable="true" th:fragment="content">
+		  
+			
+    <div class="container-fluid">
+
+      <ol class="breadcrumb m-b-0">
+        <li><a th:href="@{/index}">Home</a></li>
+        <li><a href="#/course-report" class="active">Course Report</a></li>
+        <li><a href="#/trainees/{{traineeCourse.course.courseId}}" class="active">Trainee Report</a></li>
+      </ol>
+      
+      <div class="card card-stats-primary" th:if="${error != null}">
+        <div class="card-block">
+          <div class="media">
+            <div class="media-left media-middle">
+              <i class="material-icons text-muted-light">credit_card</i>
+            </div>
+            
+            	
+          </div>
+        </div>
+      </div>
+      
+      <h1 class="page-heading h2">Trainee Detail Report</h1>
+      <div class="row">
+        <div class="col-md-8">
+        	
+        <div class="card">
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" href="#" data-toggle="tab">Basic Information</a>
+          </li>
+          
+        </ul>
+        <div class="p-a-2 tab-content">
+        	<div class="tab-pane active" id="first">
+            <form action="#" class="form-horizontal">
+              
+              <div class="form-group row">
+                <label for="name" class="col-sm-3 form-control-label">Course Name</label>
+                <div class="col-sm-8">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <input type="text" class="form-control" value="{{traineeCourse.course.title}}" disabled="true"/>
+                    </div>                    
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="name" class="col-sm-3 form-control-label">Course Type</label>
+                <div class="col-sm-8">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <input type="text" class="form-control" value="{{traineeCourse.course.category}}" disabled="true"/>
+                    </div>                    
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="name" class="col-sm-3 form-control-label">Trainee Name</label>
+                <div class="col-sm-8">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <input type="text" class="form-control" value="{{traineeCourse.trainee.fullName}}" disabled="true"/>
+                    </div>                    
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group row">
+                <label for="name" class="col-sm-3 form-control-label">DoB</label>
+                <div class="col-sm-8">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <input type="text" class="form-control" value="{{traineeCourse.trainee.dob | date:'MM/dd/yyyy'}}" disabled="true"/>
+                    </div>                    
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group row">
+                <label for="center" class="col-sm-3 form-control-label">Center</label>
+                <div class="col-sm-6 col-md-4">
+                  <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon2">
+								<i class="material-icons md-18 text-muted">language</i>
+							</span>
+                    <input type="text" class="form-control"  ng-model="traineeCourse.traineeStatus.center" />
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group row">
+                <label for="center" class="col-sm-3 form-control-label">Final Result</label>
+                <div class="col-sm-6 col-md-4">
+                  <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon2">
+								<i class="material-icons md-18 text-muted">face</i>
+							</span>
+					<select id="exampleSelect2" class="form-control" ng-model="traineeCourse.traineeStatus.finalAssessment">
+						
+	                    <option>PASS</option>
+	                    <option>FAILED</option>
+                  	</select>
+                   
+                  </div>
+                </div>
+              </div>
+              
+              
+              <div class="form-group row">
+                <label for="email" class="col-sm-3 form-control-label">Final Comment</label>
+                <div class="col-sm-8 col-md-8">
+                  <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">
+								<i class="material-icons md-18 text-muted">comment</i>
+							</span>
+                    <input type="text" class="form-control" ng-model="traineeCourse.traineeStatus.finalComment" />
+                  </div>
+                </div>
+              </div>
+             
+              
+              <div class="form-group row">
+                <div class="col-sm-8 col-sm-offset-3">
+                  <div class="media">
+                    <div class="media-left">
+                      <a href="#/course-report" class="btn btn-secondary btn-rounded-deep right" ng-click="saveAssessment()"><i class="material-icons">save</i> Save Changes</a>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        	
+        </div>
+        </div>
+        
+        <!-- Course info -->
+         <div class="card">
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab">Course Information</a>
+          </li>
+          
+        </ul>
+        <div class="p-a-2" ng-repeat="section in traineeCourse.course.sections">
+        	<div class="card card-stats-primary">
+		        <div class="card-block">
+		          <h5>{{section.title}}</h5>
+		        </div>
+		      </div>
+        	 <div class="card">
+		        <ul class="list-group m-b-0">
+		          <li class="list-group-item" ng-repeat="topic in section.topics">
+		            <div class="media">
+		              <div class="media-left">
+		              </div>
+		              <div class="media-body">{{topic.title}}</div>
+		              <br />
+		              <ul class="list-group m-b-0">
+		              	<li class="list-group-item" ng-repeat="material in topic.materials">
+		              		<div class="media">
+		              			<div class="media-left">
+					                <div class="text-muted-light">{{$index+1}}.</div>
+					            </div>
+					            <div class="media-body">{{material.materialName}}</div>
+					            <div class="media-right">
+					              	<span class="label label-default" ng-if="material.traineeMaterial.score==null">Not start</span>
+					              	<span ng-if="material.traineeMaterial.score!=null">
+					              		<span class="label label-success" ng-if="material.traineeMaterial.highScore">{{material.traineeMaterial.score}} ({{material.traineeMaterial.traineeQuiz.percentScore}}%)</span>
+					              		<span class="label label-danger" ng-if="!material.traineeMaterial.highScore">{{material.traineeMaterial.score}} ({{material.traineeMaterial.traineeQuiz.percentScore}}%)</span>
+					              	</span>
+					            </div>
+		              		</div>
+		              	</li>
+		              </ul>
+		              
+		            </div>
+		          </li>
+		        </ul>
+		        
+		      </div>
+        	
+        </div>
+        </div>
+        <!-- end course info -->
+		</div>
+        <div class="col-md-4">
+          <div class="card">
+          <div class="card-header bg-white">
+              <div class="pull-xs-right">
+              </div>
+              <h4 class="card-title">Comment</h4>
+            </div>
+          <div class="card" ng-repeat="comment in comments">
+          		<ul class="list-group list-group-fit">
+          			<li class="list-group-item">
+          				<span>Date:</span> <span>{{comment.commentDate | date:'MM/dd/yyyy'}}</span>
+          			</li>
+          			<li class="list-group-item">
+          				<span>Trainer:</span> <span>{{comment.userComment}}</span>
+          			</li>
+          			<li class="list-group-item">
+          				<span>Comment Type:</span> <span>{{comment.commentType}}</span>
+          			</li>
+          			<li class="list-group-item">
+          				<span>Comment:</span>
+          				<div>
+          				{{comment.comment}}
+          				</div> 
+          			</li>
+          		</ul>
+          		
+          </div>
+          
+          <div class="card">
+          	
+            <ul class="list-group list-group-fit">
+              
+			  <li class="list-group-item">
+                <div class="media">                  
+                  <div class="media-body media-middle">
+                   	<label for="exampleSelect2">Comment Type</label>
+                    <select id="exampleSelect2" class="form-control" ng-model="comment.commentType">
+	                    <option selected="selected">Complaint</option>
+	                    <option>Request</option>
+	                    <option>Info</option>
+                  	</select>
+                </div>
+                    
+                </div>
+              </li>
+              <li class="list-group-item">
+                <div class="media">                  
+                  <div class="media-body media-middle">
+                   	<fieldset class="form-group">
+					<label for="exampleTextarea">Comment</label>
+					<textarea id="commentid" class="form-control" ng-model="comment.comment" rows="3"></textarea>
+					</fieldset>
+					                    
+                  </div>
+                </div>
+              </li>
+              <li class="list-group-item">
+                <div class="media">                  
+                  <div class="media-body media-middle">
+                   	<button class="btn btn-success btn-rounded" ng-click="addComment()">Add</button>
+					                    
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          
+          
+          </div>
+
+          
+
+          
+        </div>
+      </div>
+
+    </div>
+  	
+
+		  
+		  </div>
+  
+	</body>
+	<!-- End -->
+</html>

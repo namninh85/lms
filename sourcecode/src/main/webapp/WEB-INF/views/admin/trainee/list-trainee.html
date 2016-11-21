@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	layout:decorator="template/layout"
+	xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org">
+<!-- Body -->
+<body>
+	<!-- Content -->
+	<div class="layout-content" data-scrollable="true"
+		th:fragment="content">
+		<div class="container-fluid">
+
+			<ol class="breadcrumb">
+				<li><a href="#">Home</a></li>
+				<li class="active">User management</li>
+			</ol>
+			<div class="card">
+				
+				<div class="card-header">
+					<h5 class="card-title">Search user</h5>
+					<!-- <button class="btn btn-link right" style="margin-top:-25px" ng-click="exportToExcel('#tableExport')">Export</button> -->
+					<a class="btn btn-link right" href="#/list" ng-click="searchUser(userRole)"  style="margin-top:-25px">Search</a>
+
+				</div>
+				<div class="p-a-1">
+				<div class="form-group row">
+		            	<label for="fullname" class="col-sm-2 form-control-label">User type</label>
+		           		<div class="col-md-3">
+			                <select class="c-select form-control" ng-model="userRole">
+											<option value="">---All---</option>
+											<option value="TRAINEE">Traniee</option>
+											<option value="TRAINER">Trainer</option>
+							</select>
+			             </div>
+		            </div>
+		        </div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+					<h5 class="card-title">List of user management</h5>
+					<!-- <button class="btn btn-link right" style="margin-top:-25px" ng-click="exportToExcel('#tableExport')">Export</button> -->
+					<a class="btn btn-link right"  href="#/new"  style="margin-top:-25px">New user</a>
+
+				</div>
+				<div class="table-responsive"> 
+					<table class="table table-bordered table-hover table-sm" id="tableExport" ng-table="usersTable" show-filter="true">
+						<tr ng-repeat="trainee in data">
+						  <td data-title="'No.'" class="center">{{$index+1}}</td>
+				          <td data-title="'Email'" sortable="'email'" filter="{ 'email': 'text'}">{{trainee.email}}</td>
+				          <td data-title="'Full Name'" sortable="'fullName'" filter="{ 'fullName': 'text'}">{{trainee.fullName}}</td>
+				          <td data-title="'Birthday'" class="center" sortable="'dob'" filter="{ 'dob': 'text'}">{{trainee.dob | date:'MM/dd/yyyy'}}</td>
+							<td id="notExport" class="center">
+									<a class="btn btn-default btn-sm" href="#/edit/{{trainee.userId}}"><i class="material-icons">edit</i></a>
+									<button class="btn btn-default btn-sm" ng-click="deleteTrainee(trainee.userId)"><i class="material-icons">delete</i></button>
+								</td>
+				        </tr>
+					</table>
+				</div>
+				<modal title="Confirm Delete" visible="showModalConfirm">
+				
+			      <button type="button"  ng-click="deleteTrainee(idDelete)" class="btn btn-info btn-rounded">OK</button>
+
+			      <button type="button" class="btn btn-default btn-rounded" ng-click="cancleTrainee()" data-dismiss="modal" >{{isSave ? 'Close' : 'Cancel'}}</button>
+			   
+		 		</modal>
+				<div class="clearfix"></div>
+
+			</div>
+		</div>
+
+	</div>
+
+
+</body>
+<!-- End -->
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<html>
+
+
+<!-- Mirrored from learnplus.themekit.io/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 02 Apr 2016 08:52:20 GMT -->
+<!-- Added by HTTrack -->
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<!-- /Added by HTTrack -->
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<title>Login/Signup</title>
+
+<meta name="robots" content="noindex" />
+
+<!-- Material Design Icons  -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet" />
+
+<!-- Roboto Web Font -->
+<link
+	href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en"
+	rel="stylesheet" />
+
+<!-- App CSS -->
+<link type="text/css" href="assets/css/style.min.css" rel="stylesheet"
+	th:href="@{/resources/css/style.min.css}" />
+
+<link rel="stylesheet"
+	th:href="@{/resources/vendor/font-awesome/font-awesome.min.css}" />
+
+</head>
+
+<body class="login">
+
+	<div class="container-fluid">
+
+		<div class="register-block">
+<!-- 			<div class="center m-a-2"> -->
+<!-- 				<div class="img-block"> -->
+<!-- 					<i class="material-icons md-36 text-muted">lock</i> -->
+<!-- 					<img class="img-logo-login" title="Wall Street English" -->
+<!-- 						src="assets/images/logo-login.png" -->
+<!-- 						th:src="@{/resources/images/logo-login.png}" /> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+
+			<div class="card">
+				<div class="card-header center">
+					<img class="img-logo-login" title="Wall Street English"
+						src="assets/images/logo-tablet.png"
+						th:src="@{/resources/images/logo-tablet.png}" />
+<!-- 					<h4 class="card-title card-title-login">Create your personal -->
+<!-- 						account</h4> -->
+				</div>
+
+				<div class="p-a-2">
+
+					<form th:action="@{/user/register}" th:object="${user}"
+						method="POST" enctype="utf8" role="form">
+						<!--   <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> -->
+
+						<div th:if="*{signInProvider != null}">
+							<input id="signInProvider" type="hidden"
+								th:field="*{signInProvider}" name="signInProvider"
+								class="form-control" />
+						</div>
+
+						<div class="form-group">
+							<input id="fullName" th:field="*{fullName}"
+								placeholder="Enter full name" name="fullName" class="form-control" required="required"/>
+						</div>
+						<div th:if="*{signInProvider ne null}">
+							<div class="form-group">
+								<div class="input-group">
+				                    <span id="basic-addon1" class="input-group-addon">
+												<i class="material-icons md-18 text-muted">mail</i>
+											</span>
+				                    <input type="email" id="email" th:field="*{email}" placeholder="Enter email" name="email" class="form-control" disabled="disabled"/>
+			                  </div>	
+							</div>
+							</div>
+						<div th:if="*{signInProvider eq null}">
+							<div class="form-group">
+								<div class="input-group">
+				                    <span id="basic-addon1" class="input-group-addon">
+												<i class="material-icons md-18 text-muted">mail</i>
+											</span>
+				                    <input type="email" id="email" th:field="*{email}" placeholder="Enter email" name="email" class="form-control" required="required"/>
+			                  </div>	
+							</div>
+							<div class="form-group">
+								<div class="input-group">
+				                    <span id="basic-addon1" class="input-group-addon">
+												<i class="material-icons md-18 text-muted">lock</i>
+											</span>
+				                    <input type="password" id="password" th:field="*{password}" placeholder="Enter Password" name="password" class="form-control" required="required"/>
+			                  </div>	
+							</div>
+							<div class="form-group">
+								<div class="input-group">
+				                    <span id="basic-addon1" class="input-group-addon">
+												<i class="material-icons md-18 text-muted">lock</i>
+											</span>
+				                    <input type="password" id="confirmPassword" placeholder="Enter Confirm Password" name="confirmPassword" class="form-control" required="required"/>
+			                  </div>
+			                  <script type="text/javascript">
+			                  var password = document.getElementById("password")
+			                  , confirm_password = document.getElementById("confirmPassword");
+
+				                function validatePassword(){
+				                  if(password.value != confirm_password.value) {
+				                    confirm_password.setCustomValidity("Passwords Don't Match");
+				                  } else {
+				                    confirm_password.setCustomValidity('');
+				                  }
+				                }
+	
+				                password.onchange = validatePassword;
+				                confirm_password.onkeyup = validatePassword;
+			                  </script>	
+							</div>
+						</div>
+						<div class="form-group">
+							<textarea id="shortDescription" th:field="*{shortDescription}" placeholder="Short Description"
+								name="shortDescription" class="form-control" ></textarea>
+						</div>
+						<div class="center">
+						<button type="submit"
+							class="btn btn-success btn-rounded"><i class="material-icons">people</i>Register</button></div>
+					</form>
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<!-- jQuery -->
+	<script src="../../../resources/vendor/jquery.min.js"
+		th:src="@{/resources/vendor/jquery.min.js}"></script>
+
+	<!-- Bootstrap -->
+	<script src="../../../resources/vendor/tether.min.js"
+		th:src="@{/resources/vendor/tether.min.js}"></script>
+	<script src="../../../resources/vendor/bootstrap.min.js"
+		th:src="@{/resources/vendor/bootstrap.min.js}"></script>
+
+	<!-- AdminPlus -->
+	<script src="../../../resources/vendor/adminplus.js"
+		th:src="@{/resources/vendor/adminplus.js}"></script>
+
+	<!-- App JS -->
+	<script src="../../../resources/js/main.min.js"
+		th:src="@{/resources/js/main.min.js}"></script>
+
+
+</body>
+
+
+<!-- Mirrored from learnplus.themekit.io/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 02 Apr 2016 08:52:21 GMT -->
+</html>

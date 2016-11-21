@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	layout:decorator="template/layout"
+	xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org">
+<!-- Body -->
+<body>
+	<!-- Content -->
+	<div class="layout-content" data-scrollable="true"
+		th:fragment="content">
+		<div class="container-fluid">
+
+			<ol class="breadcrumb">
+				<li><a href="#">Home</a></li>
+				<li class="active">Report</li>
+			</ol>
+			<div class="card">
+			<!-- 
+				<ul class="nav nav-tabs">
+					<li class="nav-item"><a class="nav-link active" href="#one"
+						data-toggle="tab">Course report</a></li>
+					<li class="nav-item"><a class="nav-link" href="#two"
+						data-toggle="tab">Other report</a></li>
+				</ul>
+				 -->
+				 
+				<div class="tab-content p-a-1 m-b-1">
+					<div class="tab-pane active" id="one">
+					<div class="form-group row">
+		            	<label for="fullname" class="col-sm-2 form-control-label">Course Status</label>
+		           		<div class="col-md-3">
+			                <select class="c-select form-control" ng-model="courseStatus">
+											<option value="ALL">---All---</option>
+											<option value="1">ACTIVE</option>
+											<option value="0">IN-ACTIVE</option>
+							</select>							
+			             </div>
+			             <div class="col-md-2"><button class="btn btn-link btn-rounded" ng-click="doSearchCourse()">Search</button></div>
+			             <div>
+			             	<button class="btn btn-link btn-rounded right" ng-click="exportToExcel('#tableExport')">Export</button>
+			             </div>
+		            </div>
+					
+						<div class="table-responsive">
+							<table class="table table-bordered table-hover table-sm"
+								id="tableExport" ng-table="courses">
+								<tr ng-repeat="course in $data">
+									<td data-title="'No.'" class="center">{{$index+1}}</td>
+									<td data-title="'Course Code'"><a
+										href="#/trainees/{{course.courseId}}">{{course.courseCode}}</a></td>
+									<td data-title="'Course Name'">{{course.title}}</td>
+									<!-- <td class="text-center" data-title="'Course Type'">SERVICE TRAINING</td> -->
+									<td class="text-center" data-title="'Start Date'">{{course.startDate
+										| date:'MM/dd/yyyy'}}</td>
+									<td data-title="'End Date'">{{course.endDate |
+										date:'MM/dd/yyyy'}}</td>
+									<td class="text-right" data-title="'Enrolled'">{{course.numberFailed}}</td>
+									<td class="text-right" data-title="'Passed'">{{course.numberPassed}}</td>
+									 
+									<td class="text-right" data-title="'Quiz Report'"><a
+										href="#/course-detail/{{course.courseId}}">Quiz Report</a></td>
+									
+								</tr>
+							</table>
+						</div>
+						
+					</div>
+					<div class="tab-pane" id="two">
+						<div class="table-responsive">
+							Report đặt ở đây
+						</div>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+
+			</div>
+		</div>
+
+	</div>
+
+
+</body>
+<!-- End -->
+</html>

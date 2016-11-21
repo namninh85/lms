@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	layout:decorator="template/layout"
+	xmlns:layout="http://www.thymeleaf.org"
+	xmlns:th="http://www.thymeleaf.org">
+	<!-- Body -->
+	<body>
+		<!-- Content -->
+		  <div class="layout-content" data-scrollable="true" layout:fragment="content">
+		  
+			
+    <div class="container-fluid">
+
+      <ol class="breadcrumb m-b-0">
+        <li><a href="#" th:href="@{/index}">Home</a></li>
+        <li><a href="#" class="active" th:href="@{/#/trainee/browse-courses}">Courses</a></li>
+        <li><span th:text="${course.title}">Course Name</span></li>
+      </ol>
+      
+      <div class="card card-stats-primary" th:if="${error != null}">
+        <div class="card-block">
+          <div class="media">
+            <div class="media-left media-middle">
+              <i class="material-icons text-muted-light">credit_card</i>
+            </div>
+            <div class="media-body media-middle" th:text="${message}">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+<!--       <h1 class="page-heading h2" th:text="${course.title}"></h1> -->
+      <div class="row  top-20 left" >
+        <div class="col-md-8">          
+          <div class="card">
+          	<div class="card-block" th:text="${course.shortDescription}">
+          		Short Description              
+          	</div>
+            
+            <div class="card-block" th:utext="${course.descriptionAsString}">
+            	Description              
+          	</div>
+          </div>
+
+          <!-- Lessons -->
+		  <h5 class="page-heading">Sections</h5>
+		  <div class="card" th:each="section,sectionStat : *{course.sections}" >
+          
+            <div class="nestable" id="nestable">
+            <ul class="nestable-list">
+              <li class="nestable-item nestable-collapsed" data-id="1">
+                <div class="nestable-handle" th:text="${section.title}">Section</div>
+				<ul class="nestable-list">
+					<li class="list-group-item" th:each="topic,topicStat : *{section.topics}" >
+						<div class="media">
+						  <div class="media-body media-middle">
+						  	<div>
+						  		<span th:text="${topic.title}">Topic title</span>
+						  	</div>
+							<small class="text-muted-light" th:text="'Start Date ' + ${#dates.format(topic.startDate, 'dd/MM/yyyy')}">Start Date</small>
+						  </div>
+						  <div class="media-right center"  th:switch="${registered}">
+		                    <div class="center" th:case="true">
+		                      <span class="label label-pill label-success m-b-05" th:text="${beans.traineeController.getProgress(topic.topicId)}">100%</span>
+		                      <progress style="width:100px" max="100" value="100" class="progress progress-success m-b-0">100%</progress>
+		                    </div>
+		                    <div class="center" th:case="false">
+		                      
+		                    </div>
+		                  </div>
+						</div>
+              		</li>
+              		
+				</ul>
+              </li>
+              
+            </ul>
+          </div>
+          
+
+		  </div>
+		
+		</div>
+        <div class="col-md-4">
+          
+          <div class="card" th:each="trainer,trainerStat : *{trainerList}" >
+            <div class="card-header bg-white">
+              <div class="media">
+                <div class="media-left media-middle">
+                  <img th:src="@{/} + 'file/download?fileName=' + ${trainer.avatar}" alt="" class="img-circle" height="50" width="50"/>
+                </div>
+                <div class="media-body media-middle">
+                  <h4 class="card-title"><a href="#" th:text="${trainer.fullName}">Trainer Name</a></h4>
+                  <p class="card-subtitle">Trainer</p>
+                </div>
+              </div>
+            </div>
+            <div class="card-block">
+              <p><span th:text="${trainer.shortDescription}"></span></p>
+              <a href="#" class="btn btn-default">
+                <i class="fa fa-facebook"></i>
+              </a>
+              <a href="#" class="btn btn-default">
+                <i class="fa fa-twitter"></i>
+              </a>
+              <a href="#" class="btn btn-default"><i class="fa fa-github"></i></a>
+            </div>
+          </div>
+
+          <div class="card">
+            <ul class="list-group list-group-fit">
+              
+			  <li class="list-group-item">
+                <div class="media">
+                  <div class="media-left">
+                    <i class="material-icons text-muted-light">schedule</i>
+                  </div>
+                  <div class="media-body media-middle">
+                    End Date: <span th:text="${course.endDate}"></span>
+                    
+                  </div>
+                </div>
+              </li>
+              <li class="list-group-item">
+                <div class="media">
+                  <div class="media-left">
+                    <i class="material-icons text-muted-light">schedule</i>
+                  </div>
+                  <div class="media-body media-middle">
+                    Course code: <span th:text="${course.courseCode}"></span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Ratings</h4>
+            </div>
+            <div class="card-block">
+              <div>
+                <i class="material-icons text-warning md-18">star</i>
+                <i class="material-icons text-warning md-18">star</i>
+                <i class="material-icons text-warning md-18">star</i>
+                <i class="material-icons text-warning md-18">star</i>
+                <i class="material-icons text-warning md-18">star_border</i>
+              </div>
+              <small class="text-muted">20 ratings</small>
+            </div>
+          </div>
+
+          
+        </div>
+      </div>
+
+    </div>
+  	
+
+		  
+		  </div>
+  
+	</body>
+	<!-- End -->
+</html>
